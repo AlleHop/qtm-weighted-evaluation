@@ -19,7 +19,7 @@ graph_name = args['graph_name']
 scenario = args['scenario']
 overwrite = args['overwrite']
 seed = args['random_seed']
-input_path = "../input/"
+input_path = "../../networkit/input/"
 output_path = args['path']
 nk.setSeed(seed, False)
 

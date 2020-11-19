@@ -7,7 +7,7 @@ scenarios='full plateauBound'
 seeds='0 1 2 3 4 5 6 7 8 9'
 
 declare -A graphs
-graphs=(["small_graphs"]='adjnoun.graph dolphins.graph karate.graph lesmis.graph football.graph terrorist.edgelist grassweb.pairs jazz.graph polbooks.graph'
+graphs=(["small_graphs"]='lesmis.graph jazz.graph'
 ["social_network"]='amazon.edgelist facebook100/Caltech36.mat dblp.edgelist youtube.edgelist facebook100/Penn94.mat'
 ["web"]='cnr-2000.graph in-2004.graph eu-2005.graph')
 
