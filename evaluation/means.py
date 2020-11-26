@@ -23,11 +23,11 @@ for root, dirs, f in os.walk(path):
             filenames.append(file)
         output_name = '_'.join(filenames[0].split('_')[1:-1]) + '.csv'
         df = pd.read_csv(path + '/' + dir +'/'+ filenames[0])
-        dfs = np.split(df, [8], axis=1)
+        dfs = np.split(df, [10], axis=1)
         input_df = dfs[0]
         output_df = dfs[1]
         for i in range(1, len(filenames)):
-            df = np.split(pd.read_csv(path + '/' + dir +'/'+ filenames[i]), [8], axis=1)[1]
+            df = np.split(pd.read_csv(path + '/' + dir +'/'+ filenames[i]), [10], axis=1)[1]
             output_df = output_df.add(df, fill_value=0)            
         for col in output_df.columns:
             output_df[col] *= 1/len(filenames)

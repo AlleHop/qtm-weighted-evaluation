@@ -10,7 +10,7 @@ import argparse
 parser = argparse.ArgumentParser(prog='evaluation.py')
 parser.add_argument('-g', '--graph_name')
 parser.add_argument('-p', '--path')
-parser.add_argument('-s', '--scenario', choices=['full', 'plateauBound', 'withoutBucketQueue', 'simple', 'init'])
+parser.add_argument('-s', '--scenario', choices=['full', 'plateauBound', 'withoutBucketQueue', 'simple', 'init', 'weighted'])
 parser.add_argument('-r', '--random_seed', type=int)
 parser.add_argument('-o', '--overwrite', action='store_true')
 
@@ -34,8 +34,8 @@ def getInitName(i):
     if (i == 3):
         return 'asc_degree_insert'
 
-def executeMover (G, graph_name, init, s, r, p, maxIterations, df):
-    mover = nk.community.QuasiThresholdEditingLocalMover(G, init, max(maxIterations), s, r, p, True)
+def executeMover (G, graph_name, init, s, r, p, maxIterations, df, insertEditCost, removeEditCost):
+    mover = nk.community.QuasiThresholdEditingLocalMover(G, init, max(maxIterations), s, r, p, True, insertEditCost, removeEditCost)
     a = timeit.default_timer()
     mover.run()
     delta = timeit.default_timer() - a
@@ -51,7 +51,7 @@ def executeMover (G, graph_name, init, s, r, p, maxIterations, df):
     for m in maxIterations:
         u = min(m, usedIterations)
         edits = editsDevelopement[u]
-        df.loc[i] = [graph_name, G.numberOfNodes(), getInitName(init), m, s, r, p, edits, u, actualPlateau, time]
+        df.loc[i] = [graph_name, G.numberOfNodes(), getInitName(init), m, s, r, p, insertEditCost, removeEditCost, edits, u, actualPlateau, time]
         i += 1
     return df
 
@@ -68,14 +68,16 @@ def runOnGraph(graph_name, df):
     if(graph_name.split('.')[-1] == "pairs"):
         G = nk.readGraph(graph_path, nk.Format.SNAP)
     G.indexEdges()
-    for init in initializations:
-        for s in sortPaths:
-            for r in randomness:
-                if(r):
-                    for p in plateauSize:
-                        df = executeMover(G, name, init, s, r, p, maxIterations, df)
-                else:
-                    df = executeMover(G, name, init, s, r, 0, maxIterations, df)
+    for insert in insertEditCosts:
+        for remove in removeEditCosts:
+            for init in initializations:
+                for sort in sortPaths:
+                    for random in randomness:
+                        if(random):
+                            for plateau in plateauSize:
+                                df = executeMover(G, name, init, sort, random, plateau, maxIterations, df, insert, remove)
+                        else:
+                            df = executeMover(G, name, init, sort, random, 0, maxIterations, df, insert, remove)
     return df
 
 
@@ -87,6 +89,8 @@ if(scenario == 'init'):
     randomness = [False]
     plateauSize = [0]
     b_queue = True
+    insertEditCosts = [1]
+    removeEditCosts= [1]
 if(scenario == 'simple'):
     maxIterations = [2]
     initializations = [1]
@@ -94,6 +98,8 @@ if(scenario == 'simple'):
     randomness = [False]
     plateauSize = [0]
     b_queue = True
+    insertEditCosts = [1]
+    removeEditCosts = [1]
 if(scenario == 'full'):
     maxIterations = [0, 5, 10, 100]
     initializations = [0, 1, 2, 3]
@@ -101,6 +107,8 @@ if(scenario == 'full'):
     randomness = [True, False]
     plateauSize = [5]
     b_queue = True
+    insertEditCosts = [1]
+    removeEditCosts = [1]
 if(scenario == 'plateauBound'):
     initializations = [3]
     maxIterations = [100]
@@ -108,6 +116,8 @@ if(scenario == 'plateauBound'):
     randomness = [True]
     plateauSize = [1, 5, 100]
     b_queue = True
+    insertEditCosts = [1]
+    removeEditCosts = [1]
 if(scenario == 'withoutBucketQueue'):
     initializations = [0, 1, 2, 3]
     maxIterations = [0, 5, 100]
@@ -115,6 +125,17 @@ if(scenario == 'withoutBucketQueue'):
     randomness = [True, False]
     plateauSize = [5]
     b_queue = False
+    insertEditCosts = [1]
+    removeEditCosts = [1]
+if(scenario == 'weighted'):
+    initializations = [0, 1, 2, 3]
+    maxIterations = [0, 5, 100]
+    sortPaths = [True, False]
+    randomness = [True, False]
+    plateauSize = [5]
+    b_queue = False
+    insertEditCosts = [1,2,3,5,10,100,1000]
+    removeEditCosts = [1,2,3,5,10,100,1000]
 
 df = pd.DataFrame(columns  = ['graph',
                               'n',
@@ -123,6 +144,8 @@ df = pd.DataFrame(columns  = ['graph',
                               'sortPaths',
                               'randomness',
                               'plateauSize',
+                              'insertEditCost',
+                              'removeEditCost',
                               'edits',
                               'usedIterations',
                               'actualPlateau',
@@ -138,6 +161,8 @@ if not os.path.exists(output_path):
     os.makedirs(output_path)
 df['maxIterations'] = df['maxIterations'].apply(np.int64)
 df['plateauSize'] = df['plateauSize'].apply(np.int64)
+df['insertEditCost'] = df['insertEditCost'].apply(np.int64)
+df['removeEditCost'] = df['removeEditCost'].apply(np.int64)
 df['edits'] = df['edits'].apply(np.int64)
 df['usedIterations'] = df['usedIterations'].apply(np.int64)
 df['actualPlateau'] = df['actualPlateau'].apply(np.int64)
