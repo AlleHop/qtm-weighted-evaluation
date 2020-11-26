@@ -40,6 +40,7 @@ def executeMover (G, graph_name, init, s, r, p, maxIterations, df, insertEditCos
     mover.run()
     delta = timeit.default_timer() - a
     edits = mover.getNumberOfEdits()
+    editsWeight = mover.getWeightOfEdits()
     usedIterations = mover.getUsedIterations()
     time = delta * 1000
     if(r):
@@ -48,10 +49,12 @@ def executeMover (G, graph_name, init, s, r, p, maxIterations, df, insertEditCos
         actualPlateau = 0
     i = len(df.index)
     editsDevelopement = mover.getRunningInfo()[b'edits']
+    editsWeightDevelopement = mover.getRunningInfo()[b'edits_weight']
     for m in maxIterations:
         u = min(m, usedIterations)
         edits = editsDevelopement[u]
-        df.loc[i] = [graph_name, G.numberOfNodes(), getInitName(init), m, s, r, p, insertEditCost, removeEditCost, edits, u, actualPlateau, time]
+        editsWeight = editsWeightDevelopement[u]      
+        df.loc[i] = [graph_name, G.numberOfNodes(), getInitName(init), m, s, r, p, insertEditCost, removeEditCost, edits, editsWeight, u, actualPlateau, time]
         i += 1
     return df
 
@@ -130,12 +133,12 @@ if(scenario == 'withoutBucketQueue'):
 if(scenario == 'weighted'):
     initializations = [0, 1, 2, 3]
     maxIterations = [0, 5, 100]
-    sortPaths = [True, False]
-    randomness = [True, False]
+    sortPaths = [False]
+    randomness = [True]
     plateauSize = [5]
     b_queue = False
-    insertEditCosts = [1,2,3,5,10,100,1000]
-    removeEditCosts = [1,2,3,5,10,100,1000]
+    insertEditCosts = [1,2]
+    removeEditCosts = [1,2]
 
 df = pd.DataFrame(columns  = ['graph',
                               'n',
@@ -147,6 +150,7 @@ df = pd.DataFrame(columns  = ['graph',
                               'insertEditCost',
                               'removeEditCost',
                               'edits',
+                              'editsWeight',
                               'usedIterations',
                               'actualPlateau',
                               'time'])
@@ -164,6 +168,7 @@ df['plateauSize'] = df['plateauSize'].apply(np.int64)
 df['insertEditCost'] = df['insertEditCost'].apply(np.int64)
 df['removeEditCost'] = df['removeEditCost'].apply(np.int64)
 df['edits'] = df['edits'].apply(np.int64)
+df['editsWeight'] = df['editsWeight'].apply(np.int64)
 df['usedIterations'] = df['usedIterations'].apply(np.int64)
 df['actualPlateau'] = df['actualPlateau'].apply(np.int64)
 df['n'] = df['n'].apply(np.int64)
