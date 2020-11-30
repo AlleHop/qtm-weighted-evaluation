@@ -4,6 +4,7 @@ set -ex
 graph_sets='small_graphs'
 #scenarios='full plateauBound withoutBucketQueue'
 scenarios='full plateauBound weighted'
+#scenarios='full plateauBound'
 seeds='0 1 2 3 4 5 6 7 8 9'
 
 declare -A graphs
@@ -43,11 +44,11 @@ for graph_set in $graph_sets; do
     graph_list=${graphs[$graph_set]}
     for graph in $graph_list; do
       for seed in $seeds; do
-        python3 evaluation.py -g ${graph} -p "../output/QTM_4/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
+        python3 evaluation.py -g ${graph} -p "../output/QTM_weighted/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
       done
       wait
     done
-    python3 means.py -p "../output/QTM_4/${graph_set}/temp_${scenario}/"
+    python3 means.py -p "../output/QTM_weighted/${graph_set}/temp_${scenario}/"
   done
 done
 
