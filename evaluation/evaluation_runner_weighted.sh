@@ -21,14 +21,14 @@ for graph_set in $graph_sets; do
     for graph in $graph_list; do
       for seed in $seeds; do
         if [ $scenario == "weighted" ]; then
-          python3 evaluation_weighted.py -g ${graph}".graph" -p "../output/QTM_weighted/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
+          python3 evaluation_weighted.py -g ${graph}".graph" -p "../output/QTM_matrix/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
         else
-          python3 evaluation_weighted.py -g ${graph}".graph" -w ${graph}".csv" -p "../output/QTM_weighted/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
+          python3 evaluation_weighted.py -g ${graph}".graph" -w ${graph}".csv" -p "../output/QTM_matrix/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
         fi  
       done
       wait
     done
-    python3 means.py -p "../output/QTM_weighted/${graph_set}/temp_${scenario}/"
+    python3 means.py -p "../output/QTM_matrix/${graph_set}/temp_${scenario}/"
   done
 done
 
