@@ -5,6 +5,7 @@ import timeit
 import pandas as pd
 import numpy as np
 import argparse
+import csv
 
 
 parser = argparse.ArgumentParser(prog='evaluation.py')
@@ -17,6 +18,7 @@ parser.add_argument('-w', '--weights')
 
 args = vars(parser.parse_args())
 graph_name = args['graph_name']
+csv_path = args['weights']
 scenario = args['scenario']
 overwrite = args['overwrite']
 seed = args['random_seed']
@@ -75,6 +77,13 @@ def runOnGraph(graph_name, df):
         G = nk.readGraph(graph_path, nk.Format.SNAP, continuous=False, directed=False)
     if(graph_name.split('.')[-1] == "pairs"):
         G = nk.readGraph(graph_path, nk.Format.SNAP)
+    weightMatrix = []
+    if(editMatrixUsed):
+        with open(weight_path + csv_path, 'r') as read_obj:
+            # pass the file object to reader() to get the reader object
+            # csv_reader = reader(read_obj)
+            # Pass reader object to list() to get a list of lists
+            weightMatrix = [list(map(int,rec)) for rec in csv.reader(read_obj, delimiter=',')]
     G.indexEdges()
     for insert in insertEditCosts:
         for remove in removeEditCosts:
@@ -97,7 +106,8 @@ if(scenario == 'weighted'):
     b_queue = False
     insertEditCosts = [1,2]
     removeEditCosts = [1,2]
-    weightMatrix = None
+    weightMatrix = []
+    editMatrixUsed = False
 if(scenario == 'matrix'):
     initializations = [0, 1, 2, 3]
     maxIterations = [0, 5, 100]
@@ -108,6 +118,7 @@ if(scenario == 'matrix'):
     insertEditCosts = [1]
     removeEditCosts = [1]
     weightMatrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    editMatrixUsed = True
 
 df = pd.DataFrame(columns  = ['graph',
                               'n',
