@@ -22,8 +22,8 @@ csv_path = args['weights']
 scenario = args['scenario']
 overwrite = args['overwrite']
 seed = args['random_seed']
-input_path = "../../input/smallgraphs/graphs/"
-weight_path = "../../input/smallgraphs/weights/"
+input_path = "../../input/biological/graphs/"
+weight_path = "../../input/biological/weights/"
 output_path = args['path']
 nk.setSeed(seed, False)
 
@@ -104,9 +104,9 @@ if(scenario == 'weighted'):
     randomness = [True]
     plateauSize = [5]
     b_queue = False
-    insertEditCosts = [1,2,100]
-    removeEditCosts = [1,2,100]
-    weightMatrix = None
+    insertEditCosts = [1,2]
+    removeEditCosts = [1,2]
+    weightMatrix = []
     editMatrixUsed = False
 if(scenario == 'matrix'):
     initializations = [0, 1, 2, 3]
