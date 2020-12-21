@@ -4,7 +4,7 @@ import argparse
 import math
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Convert protein .cm files to metis graph files')
+    parser = argparse.ArgumentParser(description='Convert protein .cm files to csv weight files')
     parser.add_argument('--threshold', help='The threshold', default=0, type=float)
     parser.add_argument('--multiplier', help='The multiplier', default=100, type=int)
     parser.add_argument('input', help='The input file')
@@ -39,8 +39,8 @@ if __name__ == '__main__':
                         neighbors[v-1][u-1] = int_weight
                         m += 1
                     else :
-                        neighbors[u-1][v-1] = -1 * int_weight
-                        neighbors[v-1][u-1] = -1 * int_weight
+                        neighbors[u-1][v-1] = int_weight
+                        neighbors[v-1][u-1] = int_weight
                         m += 1
 
     with open(args.output, 'w') as output_file:
