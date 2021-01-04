@@ -23,7 +23,7 @@ for graph_set in $graph_sets; do
     done
     wait
   done
-  python3 means.py -p "../output/QTM_matrix/${graph_set}/temp_${scenario}/"
+  python3 means.py -p "../output/QTM_bio${graph_set}/temp_${scenario}/"
   done
 done
 
