@@ -9,7 +9,6 @@ seeds='0 1 2 3 4 5 6 7 8 9'
 
 declare -A graphs
 graph_files=(["biological"]="bio_list.txt")
-exec 3<> /tmp/foo  #open fd 3.
 
 for graph_set in $graph_sets; do
   for scenario in $scenarios; do
@@ -31,7 +30,6 @@ for graph_set in $graph_sets; do
   done
 done
 
-exec 10>&- #close fd 3.
 #limit=400
 #input="bio${limit}.txt"
 #scenario='full'
