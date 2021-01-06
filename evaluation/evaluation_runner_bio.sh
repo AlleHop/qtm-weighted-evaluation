@@ -8,17 +8,21 @@ scenarios='matrix'
 seeds='0 1 2 3 4 5 6 7 8 9'
 
 declare -A graphs
-graphs=(["biological"]='bio-nr-1-size-9')
+graph_files=(["biological"]="bio_list.txt")
+exec 3<> /tmp/foo  #open fd 3.
 
 for graph_set in $graph_sets; do
   for scenario in $scenarios; do
-    graph_list=${graphs[$graph_set]}
-    for graph in $graph_list; do
+    input="bio_list.txt"
+    echo "$input"
+    paste -d@ $input $input | while IFS="@" read -r graph f2
+    do
+      echo "$line"
       for seed in $seeds; do
         if [ $scenario == "weighted" ]; then
-          python3 evaluation_bio.py -g ${graph}".graph" -p "../output/QTM_bio/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
+          python3 evaluation_bio.py -g "${graph}.graph" -p "../output/QTM_bio/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
         else
-          python3 evaluation_bio.py -g ${graph}".graph" -w ${graph}".csv" -p "../output/QTM_bio/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
+          python3 evaluation_bio.py -g "${graph}.graph" -w "${graph}.csv" -p "../output/QTM_bio/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
         fi  
     done
     wait
@@ -27,6 +31,7 @@ for graph_set in $graph_sets; do
   done
 done
 
+exec 10>&- #close fd 3.
 #limit=400
 #input="bio${limit}.txt"
 #scenario='full'

@@ -111,9 +111,9 @@ if(scenario == 'weighted'):
 if(scenario == 'matrix'):
     initializations = [0, 1, 2, 3]
     maxIterations = [0, 5, 100]
-    sortPaths = [False]
+    sortPaths = [True]
     randomness = [True]
-    plateauSize = [5]
+    plateauSize = [5,50,100]
     b_queue = False
     insertEditCosts = [1]
     removeEditCosts = [1]
