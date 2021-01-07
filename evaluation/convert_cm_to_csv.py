@@ -33,14 +33,14 @@ if __name__ == '__main__':
 
                 for i, weight in enumerate(map(float, all_neighbors)):
                     v = u + i + 1
-                    int_weight = math.ceil(weight * args.multiplier)
-                    if int_weight >= args.threshold:
+                    int_weight = math.ceil(abs(weight * args.multiplier))
+                    if weight >= args.threshold:
                         neighbors[u-1][v-1] = int_weight
                         neighbors[v-1][u-1] = int_weight
                         m += 1
                     else :
-                        neighbors[u-1][v-1] = int_weight
-                        neighbors[v-1][u-1] = int_weight
+                        neighbors[u-1][v-1] = (-1) * int_weight
+                        neighbors[v-1][u-1] = (-1) * int_weight
                         m += 1
 
     with open(args.output, 'w') as output_file:
