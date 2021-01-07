@@ -98,7 +98,7 @@ def runOnGraph(graph_name, df):
     return df
 
 if(scenario == 'weighted'):
-    initializations = [0, 1, 2, 3]
+    initializations = [1, 2, 3]
     maxIterations = [0, 5, 100]
     sortPaths = [False]
     randomness = [True]
@@ -109,8 +109,8 @@ if(scenario == 'weighted'):
     weightMatrix = []
     editMatrixUsed = False
 if(scenario == 'matrix'):
-    initializations = [0, 1, 2, 3]
-    maxIterations = [0, 5, 100]
+    initializations = [1, 2, 3]
+    maxIterations = [0, 5, 100, 400]
     sortPaths = [True]
     randomness = [True]
     plateauSize = [5,50,100]
