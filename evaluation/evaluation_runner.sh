@@ -22,7 +22,7 @@ graphs=(["small_graphs"]='lesmis.graph jazz.graph karate.graph'
 #while IFS= read -r graph
 #do
 #  for seed in $seeds; do
-#    python3 evaluation.py -g ${graph} -p "../output/QTM_3/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
+#    python3 python_scripts/evaluation.py -g ${graph} -p "../output/QTM_3/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
 #  done
 #  wait
 #done < "$input"
@@ -32,7 +32,7 @@ graphs=(["small_graphs"]='lesmis.graph jazz.graph karate.graph'
 #while IFS= read -r graph
 #do
 #  for seed in $seeds; do
-#    python3 evaluation.py -g ${graph} -p "../output/QTM_3/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
+#    python3 python_scripts/evaluation.py -g ${graph} -p "../output/QTM_3/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
 #  done
 #  wait
 #done < "$input"
@@ -44,11 +44,11 @@ for graph_set in $graph_sets; do
     graph_list=${graphs[$graph_set]}
     for graph in $graph_list; do
       for seed in $seeds; do
-        python3 evaluation.py -g ${graph} -p "../output/QTM_weighted/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
+        python3 python_scripts/evaluation.py -g ${graph} -p "../output/QTM_weighted/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
       done
       wait
     done
-    python3 means.py -p "../output/QTM_weighted/${graph_set}/temp_${scenario}/"
+    python3 python_scripts/means.py -p "../output/QTM_weighted/${graph_set}/temp_${scenario}/"
   done
 done
 
@@ -58,7 +58,7 @@ done
 #while IFS= read -r graph
 #do
 #  for seed in $seeds; do
-#    python3 evaluation.py -g ${graph} -p "../output/QTM_3/biological${limit}/temp_${scenario}/" -s ${scenario} -r ${seed} &
+#    python3 python_scripts/evaluation.py -g ${graph} -p "../output/QTM_3/biological${limit}/temp_${scenario}/" -s ${scenario} -r ${seed} &
 #  done
 #  wait
 #done < "$input"
@@ -68,7 +68,7 @@ done
 #while IFS= read -r graph
 #do
 #  for seed in $seeds; do
-#    python3 evaluation.py -g ${graph} -p "../output/QTM_3/biological${limit}/temp_${scenario}/" -s ${scenario} -r ${seed} &
+#    python3 python_scripts/evaluation.py -g ${graph} -p "../output/QTM_3/biological${limit}/temp_${scenario}/" -s ${scenario} -r ${seed} &
 #  done
 #  wait
 #done < "$input"

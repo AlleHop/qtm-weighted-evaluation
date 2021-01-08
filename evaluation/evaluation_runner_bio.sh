@@ -12,7 +12,7 @@ graph_files=(["biological"]="bio_list.txt")
 
 for graph_set in $graph_sets; do
   for scenario in $scenarios; do
-    input="bio_list.txt"
+    input="graph_lists/bio_list.txt"
     echo "$input"
     paste -d@ $input $input | while IFS="@" read -r graph f2
     do
@@ -30,6 +30,8 @@ for graph_set in $graph_sets; do
   python3 minimum_editcost.py -p "../output/QTM_bio/${graph_set}/temp_${scenario}/"
   done
 done
+
+python3 sort.py -p "../output/QTM_bio/${graph_set}/"
 
 #limit=400
 #input="bio${limit}.txt"
