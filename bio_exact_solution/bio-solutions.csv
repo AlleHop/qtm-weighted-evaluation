@@ -1,4 +1,4 @@
-instance_index,multiplier,permutation,forbidden_subgraphs,solved,solution_cost,edits,path,time
+graph_index,multiplier,permutation,forbidden_subgraphs,solved,solution_cost,edits,path,time_exact
 1,100,0,C4P4,True,124,"[[7, 8]]",data/bio/bio-nr-1-size-9.graph,0.000826535
 2,100,0,C4P4,True,0,[],data/bio/bio-nr-2-size-10.graph,0.000274669
 3,100,0,C4P4,True,426,"[[0, 3], [1, 8], [3, 8], [4, 11], [6, 8], [7, 8]]",data/bio/bio-nr-3-size-16.graph,0.001734408
