@@ -6,7 +6,7 @@ import math
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Convert protein .cm files to csv weight files')
     parser.add_argument('--threshold', help='The threshold', default=0, type=float)
-    parser.add_argument('--multiplier', help='The multiplier', default=100, type=int)
+    parser.add_argument('--multiplier', help='The multiplier', default=100.0, type=float)
     parser.add_argument('input', help='The input file')
     parser.add_argument('output', help='The output file')
 
@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
                 for i, weight in enumerate(map(float, all_neighbors)):
                     v = u + i + 1
-                    int_weight = math.ceil(abs(weight * args.multiplier))
+                    int_weight = math.ceil(abs(weight) * args.multiplier)
                     if weight >= args.threshold:
                         neighbors[u-1][v-1] = int_weight
                         neighbors[v-1][u-1] = int_weight

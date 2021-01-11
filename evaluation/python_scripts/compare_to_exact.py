@@ -20,27 +20,32 @@ exact_df = pd.read_csv(exact)
 qtm_df = qtm_df.set_index(['graph_index'])
 exact_df = exact_df.set_index(['graph_index'])
 graph_names = exact_df[['path']]
+
 qtm_df = qtm_df.drop(columns=['maxIterations','sortPaths','randomness','plateauSize','insertEditCost','removeEditCost','edits'])
 exact_df = exact_df.drop(columns=['multiplier','permutation','forbidden_subgraphs','edits','path'])
 output_df = qtm_df.merge(exact_df, on='graph_index', how='outer' ).fillna(value= -1).sort_values(['graph_index'])
-print(graph_names)
+output_df.insert(len(output_df.columns), 'ratio', 0.0)
+output_df = output_df.astype({'editsWeight' : 'int64','usedIterations' : 'int64','actualPlateau': 'int64', 'n': 'int64', 'solution_cost': 'int64'})
 for index, row in output_df.iterrows():
     num = row[['graph']]
     if(not(isinstance(num, str))):
         output_df['graph'][index] = graph_names['path'][index].strip('data/').strip('bio').strip('/').strip('.graph')
         output_df['n'][index] = graph_names['path'][index].split('-')[4].strip('.graph')
-#print(output_df)
-#index = []
-#for i, row in df.iterrows():
-#    parts = row['graph'].split('-')
-#    index.append(int(parts[2]))
-#df.insert(0,'graph_index', index)
-#output_df = df.sort_values('graph_index')
-#output_df = output_df.set_index(['graph_index'])
-#del output_df['Unnamed: 0']
-#print(output_df)
-#if not os.path.exists(output_path):
-#    os.makedirs(output_path)
+    if(output_df['solution_cost'][index]== -1):
+        output_df['ratio'][index]= -1
+    elif(output_df['editsWeight'][index]== -1):
+        output_df['ratio'][index]= -2
+    elif(output_df['solution_cost'][index]== 0):
+        if(output_df['editsWeight'][index]!= 0):
+            output_df['ratio'][index]= -3
+        else:
+            output_df['ratio'][index]= 1
+    else:
+        ratio = output_df['editsWeight'][index] / output_df['solution_cost'][index] 
+        if(ratio< 1):
+            output_df['ratio'][index] = 1
+        else:
+            output_df['ratio'][index] = ratio
 output_df.to_csv(".." + qtm.strip(".csv") + '_compare.csv', sep=',', encoding='utf-8')
 
 
