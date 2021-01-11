@@ -19,19 +19,26 @@ for graph_set in $graph_sets; do
       echo "$line"
       for seed in $seeds; do
         if [ $scenario == "weighted" ]; then
-          python3 evaluation_bio.py -g "${graph}.graph" -p "../output/QTM_bio/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
+          python3 python_scripts/evaluation_bio.py -g "${graph}.graph" -p "../output/QTM_bio/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
         else
-          python3 evaluation_bio.py -g "${graph}.graph" -w "${graph}.csv" -p "../output/QTM_bio/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
+          python3 python_scripts/evaluation_bio.py -g "${graph}.graph" -w "${graph}.csv" -p "../output/QTM_bio/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
         fi  
     done
     wait
   done
-  python3 means.py -p "../output/QTM_bio/${graph_set}/temp_${scenario}/"
-  python3 minimum_editcost.py -p "../output/QTM_bio/${graph_set}/temp_${scenario}/"
+  python3 python_scripts/means.py -p "../output/QTM_bio/${graph_set}/temp_${scenario}/"
+  wait
+  python3 python_scripts/minimum_editcost.py -p "../output/QTM_bio/${graph_set}/temp_${scenario}/"
+  wait
   done
 done
 
-python3 sort.py -p "../output/QTM_bio/${graph_set}/"
+python3 python_scripts/sort.py -p "../output/QTM_bio/${graph_set}/"
+wait
+exact="../bio_exact_solution/bio-solutions.csv"
+
+python3 python_scripts/compare_to_exact.py "../output/QTM_bio/${graph_set}/${scenario}_minimum_sorted.csv" "${exact}" &
+
 
 #limit=400
 #input="bio${limit}.txt"
