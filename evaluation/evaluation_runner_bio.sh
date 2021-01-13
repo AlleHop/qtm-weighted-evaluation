@@ -37,7 +37,7 @@ python3 python_scripts/sort.py -p "../output/QTM_bio/${graph_set}/"
 wait
 exact="../bio_exact_solution/bio-solutions.csv"
 
-python3 python_scripts/compare_to_exact.py "../output/QTM_bio/${graph_set}/${scenario}_minimum_sorted.csv" "${exact}" &
+python3 python_scripts/compare_to_exact.py "../output/QTM_bio/${graph_set}/sorted/${scenario}_minimum_sorted.csv" "${exact}" &
 
 
 #limit=400
