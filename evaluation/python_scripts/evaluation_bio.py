@@ -109,7 +109,7 @@ if(scenario == 'weighted'):
     weightMatrix = []
     editMatrixUsed = False
 if(scenario == 'matrix'):
-    initializations = [1, 2, 3]
+    initializations = [0, 1, 2, 3]
     maxIterations = [0, 5, 100, 400]
     sortPaths = [True]
     randomness = [True]
@@ -117,7 +117,7 @@ if(scenario == 'matrix'):
     b_queue = False
     insertEditCosts = [1]
     removeEditCosts = [1]
-    weightMatrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    weightMatrix = []
     editMatrixUsed = True
 
 df = pd.DataFrame(columns  = ['graph',
