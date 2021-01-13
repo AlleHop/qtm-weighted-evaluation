@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import argparse
 import csv
+import errno
 
 
 parser = argparse.ArgumentParser(prog='evaluation.py')
@@ -142,7 +143,12 @@ output_path += graph_name_simple + '/'
 df = runOnGraph(graph_name, df)
 
 if not os.path.exists(output_path):
-    os.makedirs(output_path)
+    try:
+        os.makedirs(output_path)
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
+    #os.makedirs(output_path)
 df['maxIterations'] = df['maxIterations'].apply(np.int64)
 df['plateauSize'] = df['plateauSize'].apply(np.int64)
 df['insertEditCost'] = df['insertEditCost'].apply(np.int64)
