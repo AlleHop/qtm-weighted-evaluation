@@ -14,6 +14,7 @@ args = vars(parser.parse_args())
 path = args['path']
 
 parent_path = '/'.join(path.split('/')[:-2]) + '/'
+print(parent_path)
 for root, dirs, f in os.walk(path):
     #dirs = dirs[1:]
     result = []
@@ -21,6 +22,8 @@ for root, dirs, f in os.walk(path):
         filenames = []
         for file in os.listdir(path + '/' + dir):
             filenames.append(file)
+        if(len(filenames) == 0):
+            continue
         output_name = '_'.join(filenames[0].split('_')[1:-1]) + '.csv'
         df = pd.read_csv(path + '/' + dir +'/'+ filenames[0])
         dfs = np.split(df, [10], axis=1)
