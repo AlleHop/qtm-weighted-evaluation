@@ -21,11 +21,11 @@ qtm_df = qtm_df.set_index(['graph_index'])
 exact_df = exact_df.set_index(['graph_index'])
 graph_names = exact_df[['path']]
 
-qtm_df = qtm_df.drop(columns=['maxIterations','sortPaths','randomness','plateauSize','insertEditCost','removeEditCost','edits'])
+qtm_df = qtm_df.drop(columns=['maxIterations','sortPaths','randomness','plateauSize','insertEditCost','removeEditCost'])
 exact_df = exact_df.drop(columns=['multiplier','permutation','forbidden_subgraphs','edits','path'])
 output_df = qtm_df.merge(exact_df, on='graph_index', how='outer' ).fillna(value= -1).sort_values(['graph_index'])
 output_df.insert(len(output_df.columns), 'ratio', 0.0)
-output_df = output_df.astype({'editsWeight' : 'int64','usedIterations' : 'int64','actualPlateau': 'int64', 'n': 'int64', 'solution_cost': 'int64'})
+output_df = output_df.astype({'edits' : 'int64', 'editsWeight' : 'int64','usedIterations' : 'int64','actualPlateau': 'int64', 'n': 'int64', 'solution_cost': 'int64'})
 for index, row in output_df.iterrows():
     num = row[['graph']]
     #if(not(isinstance(num, str))):
