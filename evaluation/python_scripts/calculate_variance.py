@@ -38,8 +38,8 @@ for root, dirs, f in os.walk(path):
         output_df = df[(df['maxIterations'] == 400 ) &  (df['plateauSize'] == 100) ].drop(columns=['sortPaths','randomness','insertEditCost','removeEditCost'])
 
         #mean = output_df.groupby('initialization')[['editsWeight','edits', 'time']].std(ddof=0)
-        mean_init = output_df.groupby('initialization')[['editsWeight','edits', 'time']].std(ddof=0)
-        mean_seed = output_df.groupby('seed')[['editsWeight','edits', 'time']].std(ddof=0)
+        mean_init = output_df.groupby('initialization')[['editsWeight','edits', 'time']].mean()
+        mean_seed = output_df.groupby('seed')[['editsWeight','edits', 'time']].mean()
         std_init = output_df.groupby('initialization')[['editsWeight','edits', 'time']].std(ddof=0)
         std_seed = output_df.groupby('seed')[['editsWeight','edits', 'time']].std(ddof=0)
         min_init = output_df.groupby('initialization')[['editsWeight','edits', 'time']].min()
