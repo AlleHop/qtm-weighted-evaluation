@@ -35,7 +35,6 @@ for root, dirs, f in os.walk(path):
         output_df['initialization'] = 'QTM-weighted-' + output_df['initialization'].astype(str)
         output_df['initialization'] = output_df['initialization'].str.replace("_", "-")
         output_df = output_df.rename({'initialization': 'algorithm'}, axis=1)
-        print(output_df)
         del output_df['Unnamed: 0']
         result.append(output_df)
     result_df = result[0]
