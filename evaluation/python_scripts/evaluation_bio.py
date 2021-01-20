@@ -9,10 +9,10 @@ import csv
 import errno
 
 
-parser = argparse.ArgumentParser(prog='evaluation.py')
+parser = argparse.ArgumentParser(prog='evaluation_bio.py')
 parser.add_argument('-g', '--graph_name')
 parser.add_argument('-p', '--path')
-parser.add_argument('-s', '--scenario', choices=['weighted', 'matrix'])
+parser.add_argument('-s', '--scenario', choices=['weighted', 'biomatrix'])
 parser.add_argument('-r', '--random_seed', type=int)
 parser.add_argument('-o', '--overwrite', action='store_true')
 parser.add_argument('-w', '--weights')
@@ -31,13 +31,13 @@ nk.setSeed(seed, False)
 
 def getInitName(i):
     if (i == 0):
-        return 'trivial'
+        return 'no-init'
     if (i == 1):
-        return 'editing'
+        return 'edit-init'
     if (i == 2):
-        return 'random_insert'
+        return 'rand-min-init'
     if (i == 3):
-        return 'asc_degree_insert'
+        return 'asc-min-init'
 
 def executeMover (G, graph_name, init, s, r, p, maxIterations, df, insertEditCost, removeEditCost, weightMatrix):
     if(weightMatrix == None):
@@ -62,7 +62,7 @@ def executeMover (G, graph_name, init, s, r, p, maxIterations, df, insertEditCos
         u = min(m, usedIterations)
         edits = editsDevelopement[u]
         editsWeight = editsWeightDevelopement[u]      
-        df.loc[i] = [graph_name, G.numberOfNodes(), getInitName(init), m, s, r, p, insertEditCost, removeEditCost, edits, editsWeight, u, actualPlateau, time]
+        df.loc[i] = [graph_name, G.numberOfNodes(), seed, getInitName(init), m, s, r, p, insertEditCost, removeEditCost, edits, editsWeight, u, actualPlateau, time]
         i += 1
     return df
 
@@ -109,7 +109,7 @@ if(scenario == 'weighted'):
     removeEditCosts = [1,2]
     weightMatrix = []
     editMatrixUsed = False
-if(scenario == 'matrix'):
+if(scenario == 'biomatrix'):
     initializations = [0, 1, 2, 3]
     maxIterations = [0, 5, 100, 400]
     sortPaths = [True]
@@ -123,6 +123,7 @@ if(scenario == 'matrix'):
 
 df = pd.DataFrame(columns  = ['graph',
                               'n',
+                              'seed',
                               'initialization',
                               'maxIterations',
                               'sortPaths',
@@ -149,6 +150,7 @@ if not os.path.exists(output_path):
         if e.errno != errno.EEXIST:
             raise
     #os.makedirs(output_path)
+df['seed'] = df['seed'].apply(np.int64)
 df['maxIterations'] = df['maxIterations'].apply(np.int64)
 df['plateauSize'] = df['plateauSize'].apply(np.int64)
 df['insertEditCost'] = df['insertEditCost'].apply(np.int64)

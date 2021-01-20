@@ -28,9 +28,7 @@ for root, dirs, f in os.walk(path):
         output_name_seed = '_'.join(filenames[0].split('_')[1:-1]) + '_var_seed.csv'
         seeds = []
         for i in range(0, len(filenames)):
-            seed_number = filenames[i].split('_')[2].strip('.csv')
             file_df = pd.read_csv(path + '/' + dir +'/'+ filenames[i])
-            file_df.insert(3,'seed', seed_number)
             seeds.append(file_df)
         df = seeds[0]
         for i in range(1, len(seeds)):
@@ -50,6 +48,8 @@ for root, dirs, f in os.walk(path):
         output_df_seed = output_df.drop(columns=['time','edits','editsWeight','usedIterations', 'actualPlateau', 'initialization'])
         output_df_seed = output_df_seed.join(min_seed, on='seed', how = 'inner').join(mean_seed, on='seed',lsuffix='Min', how = 'inner').join(std_seed, on='seed',lsuffix='Mean',rsuffix='Std', how = 'inner')
         output_df_seed = output_df_seed.drop_duplicates(subset= ['graph', 'seed'])
+        output_df_init['WeightVariantionCoefficient'] = output_df_init['editsWeightStd'] / output_df_init['editsWeightMean'].replace({ 0 : 1 })
+        output_df_seed['WeightVariantionCoefficient'] = output_df_seed['editsWeightStd'] / output_df_seed['editsWeightMean'].replace({ 0 : 1 })
         del output_df_init['Unnamed: 0']
         del output_df_seed['Unnamed: 0']
         result_init.append(output_df_init)

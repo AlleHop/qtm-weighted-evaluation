@@ -29,14 +29,14 @@ for file in os.listdir(path + "sorted/"):
         sum_exact_list.append(sum_exact)
         sum_noexact = len(df[(df['ratio']==-1.0)])
         sum_noexact_list.append(sum_noexact)
-        sum_good = len(df[(df['ratio']>1.0) & (df['ratio']<=1.5)])
+        sum_good = len(df[(df['ratio']>1.0) & (df['ratio']<=1.05)])
         sum_good_list.append(sum_good)
-        sum_bad = len(df[(df['ratio']>1.5)])
+        sum_bad = len(df[(df['ratio']>1.05)])
         sum_bad_list.append(sum_bad)
         output_df.insert(1,'exact_solved', sum_exact_list)
         output_df.insert(2,'no_exact_solution', sum_noexact_list)
-        output_df.insert(3,'solved<1.5', sum_good_list)
-        output_df.insert(3,'solved>1.5', sum_bad_list)
+        output_df.insert(3,'solved<1.05', sum_good_list)
+        output_df.insert(3,'solved>1.05', sum_bad_list)
         print(output_df)
         #del output_df['Unnamed: 0']
         if not os.path.exists(output_path):

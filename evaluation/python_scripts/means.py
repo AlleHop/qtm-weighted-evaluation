@@ -24,7 +24,7 @@ for root, dirs, f in os.walk(path):
             filenames.append(file)
         if(len(filenames) == 0):
             continue
-        output_name = '_'.join(filenames[0].split('_')[1:-1]) + '.csv'
+        output_name = '_'.join(filenames[0].split('_')[1:-1]) + 'mean.csv'
         df = pd.read_csv(path + '/' + dir +'/'+ filenames[0])
         dfs = np.split(df, [10], axis=1)
         input_df = dfs[0]

@@ -1,0 +1,45 @@
+import sys, getopt
+import os
+import networkit as nk
+import timeit
+import pandas as pd
+import numpy as np
+import argparse
+
+
+parser = argparse.ArgumentParser(prog='all.py')
+parser.add_argument('-p', '--path')
+
+args = vars(parser.parse_args())
+path = args['path']
+
+parent_path = '/'.join(path.split('/')[:-2]) + '/'
+for root, dirs, f in os.walk(path):
+    #dirs = dirs[1:]
+    result = []
+    for dir in dirs:
+        filenames = []
+        for file in os.listdir(path + '/' + dir):
+            filenames.append(file)
+        if(len(filenames) == 0):
+            continue
+        output_name = '_'.join(filenames[0].split('_')[1:-1]) + '_all.csv'
+        seeds = []
+        for i in range(0, len(filenames)):
+            file_df = pd.read_csv(path + '/' + dir +'/'+ filenames[i])
+            seeds.append(file_df)
+        df = seeds[0]
+        for i in range(1, len(seeds)):
+            df = pd.concat((df, seeds[i]), ignore_index = True)
+        output_df = df[(df['maxIterations'] == 400 ) &  (df['plateauSize'] == 100) ].drop(columns=['sortPaths','randomness','insertEditCost','removeEditCost', 'maxIterations', 'plateauSize'])
+        output_df['initialization'] = 'QTM-weighted-' + output_df['initialization'].astype(str)
+        output_df['initialization'] = output_df['initialization'].str.replace("_", "-")
+        output_df = output_df.rename({'initialization': 'algorithm'}, axis=1)
+        print(output_df)
+        del output_df['Unnamed: 0']
+        result.append(output_df)
+    result_df = result[0]
+    for i in range(1, len(result)):
+        result_df = pd.concat((result_df, result[i]))
+    result_df.to_csv(parent_path + output_name, sep=',', encoding='utf-8')
+    break

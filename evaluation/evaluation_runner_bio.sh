@@ -3,7 +3,7 @@
 set -ex
 graph_sets='biological'
 #scenarios='full plateauBound withoutBucketQueue'
-scenarios='matrix'
+scenarios='biomatrix'
 #scenarios='full plateauBound'
 seeds='0 1 2 3 4 5 6 7 8 9'
 
@@ -30,10 +30,16 @@ for graph_set in $graph_sets; do
   wait
   python3 python_scripts/minimum_editcost.py -p "../output/QTM_bio/${graph_set}/temp_${scenario}/"
   wait
+  python3 python_scripts/all.py -p "../output/QTM_bio/${graph_set}/temp_${scenario}/"
+  wait
+  python3 python_scripts/calculate_variance.py -p "../output/QTM_bio/${graph_set}/temp_${scenario}/"
+  wait
   done
 done
 
 python3 python_scripts/sort.py -p "../output/QTM_bio/${graph_set}/"
+wait
+python3 performance/performance_plot.py -p "../output/QTM_bio/${graph_set}/"
 wait
 exact="../bio_exact_solution/bio-solutions.csv"
 
