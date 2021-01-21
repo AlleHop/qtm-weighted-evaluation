@@ -16,3 +16,7 @@ Ctrl-a d # detach (screen-Fenster verlassen; -> ausloggen)
 screen -r # reattach (nach Wiedereinloggen Prozess beobachten)
 Ctrl-a k # kill (angezeigten Prozess beenden)
 ? # Hilfebildschirm
+
+exact=""
+
+python3 python_scripts/compare_to_exact.py ../../remote_output/output/QTM_bio/biological/sorted/biomatrix_minimum_sorted.csv ../bio_exact_solution/bio-solutions.csv

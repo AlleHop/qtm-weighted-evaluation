@@ -21,7 +21,7 @@ qtm_df = qtm_df.set_index(['graph_index'])
 exact_df = exact_df.set_index(['graph_index'])
 graph_names = exact_df[['path']]
 
-qtm_df = qtm_df.drop(columns=['maxIterations','sortPaths','randomness','plateauSize','insertEditCost','removeEditCost'])
+#qtm_df = qtm_df.drop(columns=['maxIterations','sortPaths','randomness','plateauSize','insertEditCost','removeEditCost'])
 exact_df = exact_df.drop(columns=['multiplier','permutation','forbidden_subgraphs','edits','path'])
 output_df = qtm_df.merge(exact_df, on='graph_index', how='outer' ).fillna(value= -1).sort_values(['graph_index'])
 output_df.insert(len(output_df.columns), 'ratio', 0.0)

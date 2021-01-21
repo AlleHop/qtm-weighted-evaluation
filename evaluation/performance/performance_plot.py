@@ -11,9 +11,11 @@ import os
 
 parser = argparse.ArgumentParser(prog='performance_plot.py')
 parser.add_argument('-p', '--path')
+parser.add_argument('-e', '--exact', help='exact solution', default="", type=str)
 
 args = vars(parser.parse_args())
 path = args['path']
+exact= args['exact']
 
 
 def algorithm_style(algorithm):
@@ -133,9 +135,22 @@ if __name__ == '__main__':
                         #'generated_results-aggregated.csv'
                         ]:
                         # 'bio_with_20_iterations.csv']:
+        d = { 'graph':['none'], 'solution_cost':[-1]}
+        exact_solution = pd.DataFrame(d,columns=['graph','solution_cost'])
+
+        if(exact != ""):
+            exact_solution = pd.read_csv(exact)
+            exact_solution['path'] = exact_solution['path'].str.replace("data/bio/", "").str.replace(".graph", "")
+            exact_solution = exact_solution.rename({'path': 'graph'}, axis=1).drop(columns=['multiplier', 'permutation', 'edits', 'time_exact', 'forbidden_subgraphs', 'graph_index', 'solved'])
+            exact_solution = exact_solution.set_index(['graph'])
+            print(exact_solution)
+            print(exact_solution[exact_solution['graph'] == 'bio-nr-3212-size-5'])
+        
         d = pd.read_csv(path + result_name)
         d['Best k'] = d.groupby(['graph'])['editsWeight'].transform(np.min)
         assert ((d['Best k'] <= d['editsWeight']) | d['editsWeight'].isna()).all()
+        d['Best unweighted k'] = d.groupby(['graph'])['edits'].transform(np.min)
+        assert ((d['Best unweighted k'] <= d['edits']) | d['edits'].isna()).all()
 
         # d['Ratio'] = d['Best k'] / d['Edits']
 
@@ -161,11 +176,13 @@ if __name__ == '__main__':
             if len(filtered_df) == 0:
                 continue
 
-            # filtered_df['Exact'] = filtered_df.groupby(['Graph'])['Edits'].transform(lambda x : exact_solution[x.name] if x.name in exact_solution else np.nan)
-
+            filtered_df['exact'] = filtered_df.groupby(['graph'])['editsWeight'].transform(lambda x : exact_solution[x.name] if x.name in exact_solution else np.nan)
+            print(filtered_df)
             filtered_df['Best filtered k'] = filtered_df.groupby(['graph'])['editsWeight'].transform(np.min)
             assert ((filtered_df['Best filtered k'] <= filtered_df['editsWeight']) | filtered_df['editsWeight'].isna()).all()
-            
+            filtered_df['Best filtered unweighted k'] = filtered_df.groupby(['graph'])['edits'].transform(np.min)
+            assert ((filtered_df['Best filtered unweighted k'] <= filtered_df['edits']) | filtered_df['edits'].isna()).all()
+
             # if 'with_20' in result_name:
             #     filtered_df['Perf. Ratio'] = filtered_df['Edits 20'] / filtered_df['Best filtered k']
             #     filtered_df.loc[(filtered_df['Edits 20'] == filtered_df['Best filtered k']), 'Perf. Ratio'] = 1.0
@@ -175,7 +192,7 @@ if __name__ == '__main__':
             # filtered_df.loc[((filtered_df['Best k'] == 0) & (filtered_df['Edits'] > 0)), 'Perf. Ratio'] = 100
 
             plot_df = get_fraction_ratio_df(filtered_df)
-
+            print(plot_df['Ratio'].max())
             if plot_df['Ratio'].max() > 3:
                 fig = plot_with_buckets(plot_df)
             else:
@@ -200,4 +217,16 @@ if __name__ == '__main__':
                 fig.savefig(
                     output_path + result_name.replace('.csv',
                                         '-min-k-0-editsWeight-performance-{}.pdf'.format(set_name)),
+                    bbox_inches='tight')
+
+                plot_df = get_fraction_ratio_df(filtered_df[filtered_df['Best unweighted k'] > 20])
+
+                if plot_df['Ratio'].max() > 3:
+                    fig = plot_with_buckets(plot_df)
+                else:
+                    fig = plot_simple(plot_df)
+
+                fig.savefig(
+                    output_path + result_name.replace('.csv',
+                                        '-min-k-20-edits-performance-{}.pdf'.format(set_name)),
                     bbox_inches='tight')

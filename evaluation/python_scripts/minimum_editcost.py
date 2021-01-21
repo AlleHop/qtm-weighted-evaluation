@@ -25,20 +25,16 @@ for root, dirs, f in os.walk(path):
             continue
         output_name = '_'.join(filenames[0].split('_')[1:-1]) + '_minimum.csv'
         seeds = []
-        parameter = []
         for i in range(0, len(filenames)):
-            parameter_df = np.split(pd.read_csv(path + '/' + dir +'/'+ filenames[i]), [10], axis=1)[0]
-            file_df = np.split(pd.read_csv(path + '/' + dir +'/'+ filenames[i]), [10], axis=1)[1]
-            parameter.append(parameter_df)
+            file_df = pd.read_csv(path + '/' + dir +'/'+ filenames[i])
             seeds.append(file_df)
         df = seeds[0]
-        indf = parameter[0]
         for i in range(1, len(seeds)):
             df = pd.concat((df, seeds[i]), ignore_index = True)
-            indf = pd.concat((indf, parameter[i]), ignore_index = True)
-        minimum_list = df.apply(pd.to_numeric).idxmin(axis=0)  
-        output_df = df.iloc[[minimum_list[1]]]
-        output_df = indf.join(output_df, how = 'right')
+        output_df = df[(df['maxIterations'] == 400 ) &  (df['plateauSize'] == 100) ].drop(columns=['sortPaths','randomness','insertEditCost','removeEditCost', 'maxIterations', 'plateauSize'])
+        output_df = output_df[output_df.editsWeight == output_df.editsWeight.min()]
+        output_df = output_df.iloc[[0]]
+
         del output_df['Unnamed: 0']
         result.append(output_df)
     result_df = result[0]
