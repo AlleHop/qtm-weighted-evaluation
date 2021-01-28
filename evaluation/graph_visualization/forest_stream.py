@@ -1,11 +1,18 @@
 from networkit import *
 import numpy as np
+import argparse
+
+parser = argparse.ArgumentParser(prog='forest_stream.py')
+parser.add_argument('-n', '--name', help='name of bio graph')
+
+args = vars(parser.parse_args())
+bioname = args['name']
 
 setSeed(0, False)
 
 #G = readGraph("../../networkit/input/karate.graph", Format.METIS)
-G = readGraph("../../input/biological/graphs/bio-nr-2666-size-20.graph", Format.METIS)
-with open("../../input/biological/weights/bio-nr-2666-size-20.csv", 'r') as read_obj:
+G = readGraph("../../input/biological/graphs/" + bioname + ".graph", Format.METIS)
+with open("../../input/biological/weights/" + bioname + ".csv", 'r') as read_obj:
     # pass the file object to reader() to get the reader object
     # csv_reader = reader(read_obj)
     # Pass reader object to list() to get a list of lists
@@ -17,18 +24,18 @@ D = mover.getDynamicForestGraph()
 Q = mover.getQuasiThresholdGraph()
 edits = mover.getRunningInfo()[b'edits']
 editsCost = mover.getRunningInfo()[b'edits_weight']
-Gephi = readGraph("../../input/biological/graphs/bio-nr-2666-size-20.graph", Format.METIS)
+Gephi = readGraph("../../input/biological/graphs/" + bioname + ".graph", Format.METIS)
 print("Edits: ", edits)
 print("EditCosts: ", editsCost)
 
 for u, v in Q.iterEdges():
     if not G.hasEdge(u,v):
         Gephi.addEdge(u,v)
-Gephi.indexEdges()
+
 
 #G = readGraph("../../networkit/input/karate.graph", Format.METIS)
-H = readGraph("../../input/optimization/graphs/bio-nr-2666-size-20-opt.graph", Format.METIS)
-with open("../../input/optimization/weights/bio-nr-2666-size-20-opt.csv", 'r') as read_obj:
+H = readGraph("../../input/optimization/graphs/" + bioname + "-opt.graph", Format.METIS)
+with open("../../input/optimization/weights/" + bioname + "-opt.csv", 'r') as read_obj:
     # pass the file object to reader() to get the reader object
     # csv_reader = reader(read_obj)
     # Pass reader object to list() to get a list of lists
@@ -38,6 +45,12 @@ moverOpt = community.QuasiThresholdEditingLocalMover(H, 0, 400, True, True, 100,
 moverOpt.run()
 DOpt = moverOpt.getDynamicForestGraph()
 QOpt = moverOpt.getQuasiThresholdGraph()
+
+for u, v in QOpt.iterEdges():
+    if not Gephi.hasEdge(u,v):
+        Gephi.addEdge(u,v)
+
+Gephi.indexEdges()
 
 treeEdgesQTM =[False for x in range(Gephi.numberOfEdges())]
 treeEdgesOpt =[False for x in range(Gephi.numberOfEdges())]
@@ -53,7 +66,7 @@ for u, v in Gephi.iterEdges():
     if D.hasEdge(u ,v):
         treeEdgesQTM[Gephi.edgeId(u,v)] = True
     if D.hasEdge(v ,u):
-        treeEdgesQTM[G.edgeId(u,v)] = True
+        treeEdgesQTM[Gephi.edgeId(u,v)] = True
     if DOpt.hasEdge(u ,v):
         treeEdgesOpt[Gephi.edgeId(u,v)] = True
     if DOpt.hasEdge(v ,u):
@@ -77,3 +90,6 @@ client.exportEdgeValues(Gephi, graphEdges, "graphEdges")
 
 clientTree = gephi.streaming.GephiStreamingClient(url='http://localhost:8080/workspace1')
 clientTree.exportGraph(DOpt)
+
+clientQTM = gephi.streaming.GephiStreamingClient(url='http://localhost:8080/workspace2')
+clientQTM.exportGraph(D)
