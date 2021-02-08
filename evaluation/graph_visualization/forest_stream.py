@@ -4,11 +4,17 @@ import argparse
 
 parser = argparse.ArgumentParser(prog='forest_stream.py')
 parser.add_argument('-n', '--name', help='name of bio graph')
+parser.add_argument('-s', '--seed', help='random seed', default=0, type=int)
+parser.add_argument('-i', '--init', help='initialisation of algo', default=0, type=int)
 
 args = vars(parser.parse_args())
 bioname = args['name']
+seed = args['seed']
+init = args['init']
+print("seed: ", seed)
+print("init: ", init)
 
-setSeed(0, False)
+setSeed(seed, False)
 
 #G = readGraph("../../networkit/input/karate.graph", Format.METIS)
 G = readGraph("../../input/biological/graphs/" + bioname + ".graph", Format.METIS)
@@ -18,7 +24,7 @@ with open("../../input/biological/weights/" + bioname + ".csv", 'r') as read_obj
     # Pass reader object to list() to get a list of lists
     weightMatrix = [list(map(int,rec)) for rec in csv.reader(read_obj, delimiter=',')]
 G.indexEdges()
-mover = community.QuasiThresholdEditingLocalMover(G, 0, 400, True, True, 100, True, 1, 1, weightMatrix)
+mover = community.QuasiThresholdEditingLocalMover(G, init, 400, True, True, 100, True, 1, 1, weightMatrix)
 mover.run()
 D = mover.getDynamicForestGraph()
 Q = mover.getQuasiThresholdGraph()
@@ -41,10 +47,15 @@ with open("../../input/optimization/weights/" + bioname + "-opt.csv", 'r') as re
     # Pass reader object to list() to get a list of lists
     weightMatrix = [list(map(int,rec)) for rec in csv.reader(read_obj, delimiter=',')]
 H.indexEdges()
-moverOpt = community.QuasiThresholdEditingLocalMover(H, 0, 400, True, True, 100, True, 1, 1, weightMatrix)
+moverOpt = community.QuasiThresholdEditingLocalMover(H, init, 400, True, True, 100, True, 1, 1, weightMatrix)
 moverOpt.run()
 DOpt = moverOpt.getDynamicForestGraph()
 QOpt = moverOpt.getQuasiThresholdGraph()
+
+editsOpt = moverOpt.getRunningInfo()[b'edits']
+editsCostOpt = moverOpt.getRunningInfo()[b'edits_weight']
+print("EditsOpt: ", editsOpt)
+print("EditCostsOpt: ", editsCostOpt)
 
 for u, v in QOpt.iterEdges():
     if not Gephi.hasEdge(u,v):
@@ -61,7 +72,6 @@ print("G", G.numberOfEdges())
 print("Gephi", Gephi.numberOfEdges())
 for u, v in Gephi.iterEdges():
     if G.hasEdge(u ,v):
-        print("Graph Id:",Gephi.edgeId(u,v), "Nodes", u ,",",v )
         graphEdges[Gephi.edgeId(u,v)] = True
     if D.hasEdge(u ,v):
         treeEdgesQTM[Gephi.edgeId(u,v)] = True
