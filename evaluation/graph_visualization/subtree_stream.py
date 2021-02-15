@@ -24,7 +24,7 @@ with open("../../input/biological/weights/" + bioname + ".csv", 'r') as read_obj
     # Pass reader object to list() to get a list of lists
     weightMatrix = [list(map(int,rec)) for rec in csv.reader(read_obj, delimiter=',')]
 G.indexEdges()
-mover = community.QuasiThresholdEditingLocalMover(G, init, 400, False, False, False , 100, True, 1, 1)
+mover = community.QuasiThresholdEditingLocalMover(G, init, 400, True, False, False , 100, True, 1, 1, weightMatrix)
 mover.run()
 D = mover.getDynamicForestGraph()
 Q = mover.getQuasiThresholdGraph()
@@ -47,7 +47,7 @@ with open("../../input/biological/weights/" + bioname + ".csv", 'r') as read_obj
     # Pass reader object to list() to get a list of lists
     weightMatrix = [list(map(int,rec)) for rec in csv.reader(read_obj, delimiter=',')]
 H.indexEdges()
-moverSubtree = community.QuasiThresholdEditingLocalMover(H, init, 400, False, False, True, 100, True, 1, 1)
+moverSubtree = community.QuasiThresholdEditingLocalMover(H, init, 5, True, False, True, 5, True, 1, 1, weightMatrix)
 moverSubtree.run()
 DSubtree = moverSubtree.getDynamicForestGraph()
 QSubtree = moverSubtree.getQuasiThresholdGraph()
