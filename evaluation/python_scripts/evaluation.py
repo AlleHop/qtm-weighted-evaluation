@@ -35,7 +35,7 @@ def getInitName(i):
         return 'asc_degree_insert'
 
 def executeMover (G, graph_name, init, s, r, p, maxIterations, df, insertEditCost, removeEditCost):
-    mover = nk.community.QuasiThresholdEditingLocalMover(G, init, max(maxIterations), s, r, p, True, insertEditCost, removeEditCost)
+    mover = nk.community.QuasiThresholdEditingLocalMover(G, init, max(maxIterations), s, r, False, p, True, insertEditCost, removeEditCost)
     a = timeit.default_timer()
     mover.run()
     delta = timeit.default_timer() - a

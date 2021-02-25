@@ -10,7 +10,7 @@ with open("../../input/biological/weights/bio-nr-2666-size-20.csv", 'r') as read
     # Pass reader object to list() to get a list of lists
     weightMatrix = [list(map(int,rec)) for rec in csv.reader(read_obj, delimiter=',')]
 G.indexEdges()
-mover = community.QuasiThresholdEditingLocalMover(G, 0, 400, True, True, 100, True, 1, 1, weightMatrix)
+mover = community.QuasiThresholdEditingLocalMover(G, 0, 400, True, True, False, 100, True, 1, 1, weightMatrix)
 mover.run()
 Q = mover.getQuasiThresholdGraph()
 client = gephi.streaming.GephiStreamingClient(url='http://localhost:8080/workspace0')
@@ -32,7 +32,7 @@ with open("../../input/optimization/weights/bio-nr-2666-size-20-opt.csv", 'r') a
     # Pass reader object to list() to get a list of lists
     weightMatrix = [list(map(int,rec)) for rec in csv.reader(read_obj, delimiter=',')]
 H.indexEdges()
-mover2 = community.QuasiThresholdEditingLocalMover(H, 0, 400, True, True, 100, True, 1, 1, weightMatrix)
+mover2 = community.QuasiThresholdEditingLocalMover(H, 0, 400, True, True, False, 100, True, 1, 1, weightMatrix)
 mover2.run()
 QOpt = mover2.getQuasiThresholdGraph()
 clientOpt = gephi.streaming.GephiStreamingClient(url='http://localhost:8080/workspace1')

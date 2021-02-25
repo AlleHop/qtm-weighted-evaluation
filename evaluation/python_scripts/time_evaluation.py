@@ -49,7 +49,7 @@ def timeMeasurement(graph_set, bucketQueue):
         if(graph_name.split('.')[-1] == "pairs"):
             G = nk.readGraph(graph_path, nk.Format.SNAP)
         G.indexEdges()
-        mover = nk.community.QuasiThresholdEditingLocalMover(G, init, maxIterations, sortPaths, randomness, plateau, bucketQueue)
+        mover = nk.community.QuasiThresholdEditingLocalMover(G, init, maxIterations, sortPaths, randomness, False, plateau, bucketQueue)
         mover.run()
         edits = mover.getRunningInfo()[b'edits']
         time = mover.getRunningInfo()[b'time']

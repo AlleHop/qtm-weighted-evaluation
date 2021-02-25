@@ -40,9 +40,9 @@ def getInitName(i):
 
 def executeMover (G, graph_name, init, s, r, p, maxIterations, df, insertEditCost, removeEditCost, weightMatrix):
     if(weightMatrix == None):
-        mover = nk.community.QuasiThresholdEditingLocalMover(G, init, max(maxIterations), s, r, p, True, insertEditCost, removeEditCost)
+        mover = nk.community.QuasiThresholdEditingLocalMover(G, init, max(maxIterations), s, r, False, p, True, insertEditCost, removeEditCost)
     else:
-        mover = nk.community.QuasiThresholdEditingLocalMover(G, init, max(maxIterations), s, r, p, True, 1, 1, weightMatrix)
+        mover = nk.community.QuasiThresholdEditingLocalMover(G, init, max(maxIterations), s, r, False, p, True, 1, 1, weightMatrix)
     a = timeit.default_timer()
     mover.run()
     delta = timeit.default_timer() - a

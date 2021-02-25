@@ -39,11 +39,11 @@ def getInitName(i):
     if (i == 3):
         return 'asc-min-init'
 
-def executeMover (G, graph_name, init, s, r, p, maxIterations, df, insertEditCost, removeEditCost, weightMatrix):
+def executeMover (G, graph_name, init, sortPath, random, subtreeMove, maxPlateau, maxIterations, df, insertEditCost, removeEditCost, weightMatrix):
     if(weightMatrix == None):
-        mover = nk.community.QuasiThresholdEditingLocalMover(G, init, max(maxIterations), s, r, p, True, insertEditCost, removeEditCost)
+        mover = nk.community.QuasiThresholdEditingLocalMover(G, init, max(maxIterations), sortPath, random, subtreeMove, maxPlateau, True, insertEditCost, removeEditCost)
     else:
-        mover = nk.community.QuasiThresholdEditingLocalMover(G, init, max(maxIterations), s, r, p, True, 1, 1, weightMatrix)
+        mover = nk.community.QuasiThresholdEditingLocalMover(G, init, max(maxIterations), sortPath, random, subtreeMove, maxPlateau, True, 1, 1, weightMatrix)
     a = timeit.default_timer()
     mover.run()
     delta = timeit.default_timer() - a
@@ -51,7 +51,7 @@ def executeMover (G, graph_name, init, s, r, p, maxIterations, df, insertEditCos
     editsWeight = mover.getWeightOfEdits()
     usedIterations = mover.getUsedIterations()
     time = delta * 1000
-    if(r):
+    if(random):
         actualPlateau =  mover.getPlateauSize()
     else:
         actualPlateau = 0
@@ -62,7 +62,7 @@ def executeMover (G, graph_name, init, s, r, p, maxIterations, df, insertEditCos
         u = min(m, usedIterations)
         edits = editsDevelopement[u]
         editsWeight = editsWeightDevelopement[u]      
-        df.loc[i] = [graph_name, G.numberOfNodes(), seed, getInitName(init), m, s, r, p, insertEditCost, removeEditCost, edits, editsWeight, u, actualPlateau, time]
+        df.loc[i] = [graph_name, G.numberOfNodes(), seed, getInitName(init), m, sortPath, random, subtreeMove, maxPlateau, insertEditCost, removeEditCost, edits, editsWeight, u, actualPlateau, time]
         i += 1
     return df
 
@@ -86,27 +86,29 @@ def runOnGraph(graph_name, df):
             # Pass reader object to list() to get a list of lists
             weightMatrix = [list(map(int,rec)) for rec in csv.reader(read_obj, delimiter=',')]
     G.indexEdges()
-    for insert in insertEditCosts:
-        for remove in removeEditCosts:
-            for init in initializations:
-                for sort in sortPaths:
-                    for random in randomness:
-                        if(random):
-                            for plateau in plateauSize:
-                                df = executeMover(G, name, init, sort, random, plateau, maxIterations, df, insert, remove, weightMatrix)
-                        else:
-                            df = executeMover(G, name, init, sort, random, 0, maxIterations, df, insert, remove, weightMatrix)
+    for subtree in subtreeMove:
+        for insert in insertEditCosts:
+            for remove in removeEditCosts:
+                for init in initializations:
+                    for sort in sortPaths:
+                        for random in randomness:
+                            if(random):
+                                for plateau in plateauSize:
+                                    df = executeMover(G, name, init, sort, random, subtree, plateau, maxIterations, df, insert, remove, weightMatrix)
+                            else:
+                                df = executeMover(G, name, init, sort, random, subtree, 0, maxIterations, df, insert, remove, weightMatrix)
     return df
 
 if(scenario == 'weighted'):
     initializations = [1, 2, 3]
     maxIterations = [0, 5, 100]
-    sortPaths = [False]
-    randomness = [True]
+    sortPaths = [True, False]
+    randomness = [True, False]
     plateauSize = [5]
     b_queue = False
-    insertEditCosts = [1,2]
-    removeEditCosts = [1,2]
+    insertEditCosts = [1, 2, 5]
+    removeEditCosts = [1, 2, 5]
+    subtreeMove = [False]
     weightMatrix = []
     editMatrixUsed = False
 if(scenario == 'biomatrix'):
@@ -118,6 +120,20 @@ if(scenario == 'biomatrix'):
     b_queue = False
     insertEditCosts = [1]
     removeEditCosts = [1]
+    subtreeMove = [False]
+    weightMatrix = []
+    editMatrixUsed = True
+
+if(scenario == 'biosubtreeMove'):
+    initializations = [0, 1, 2, 3]
+    maxIterations = [0, 100]
+    sortPaths = [True, False]
+    randomness = [True, False]
+    plateauSize = [100]
+    b_queue = False
+    insertEditCosts = [1]
+    removeEditCosts = [1
+    subtreeMove = [False, True]
     weightMatrix = []
     editMatrixUsed = True
 
@@ -128,6 +144,7 @@ df = pd.DataFrame(columns  = ['graph',
                               'maxIterations',
                               'sortPaths',
                               'randomness',
+                              'subtreeMove',
                               'plateauSize',
                               'insertEditCost',
                               'removeEditCost',
