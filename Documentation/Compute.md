@@ -8,7 +8,7 @@ source eval-venv/bin/activate
 
 pip install cython
 pip install cmake
-git submodule --init
+git submodule init
 pip install -e .
 
 screen bash evaluation_runner_bio.sh

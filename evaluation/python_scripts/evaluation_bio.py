@@ -132,7 +132,7 @@ if(scenario == 'biosubtreeMove'):
     plateauSize = [100]
     b_queue = False
     insertEditCosts = [1]
-    removeEditCosts = [1
+    removeEditCosts = [1]
     subtreeMove = [False, True]
     weightMatrix = []
     editMatrixUsed = True
