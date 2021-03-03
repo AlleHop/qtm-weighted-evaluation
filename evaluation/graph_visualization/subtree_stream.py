@@ -1,6 +1,7 @@
 from networkit import *
 import numpy as np
 import argparse
+import faulthandler; faulthandler.enable()
 
 parser = argparse.ArgumentParser(prog='forest_stream.py')
 parser.add_argument('-n', '--name', help='name of bio graph')
@@ -24,7 +25,7 @@ with open("../../input/biological/weights/" + bioname + ".csv", 'r') as read_obj
     # Pass reader object to list() to get a list of lists
     weightMatrix = [list(map(int,rec)) for rec in csv.reader(read_obj, delimiter=',')]
 G.indexEdges()
-mover = community.QuasiThresholdEditingLocalMover(G, init, 400, True, False, False , 100, True, 1, 1, weightMatrix)
+mover = community.QuasiThresholdEditingLocalMover(G, init, 400, True, True, False , 100, True, 1, 1, weightMatrix)
 mover.run()
 D = mover.getDynamicForestGraph()
 Q = mover.getQuasiThresholdGraph()
@@ -38,7 +39,7 @@ for u, v in Q.iterEdges():
     if not G.hasEdge(u,v):
         Gephi.addEdge(u,v)
 
-
+setSeed(seed, False)
 #G = readGraph("../../networkit/input/karate.graph", Format.METIS)
 H = readGraph("../../input/biological/graphs/" + bioname + ".graph", Format.METIS)
 with open("../../input/biological/weights/" + bioname + ".csv", 'r') as read_obj:
@@ -47,7 +48,7 @@ with open("../../input/biological/weights/" + bioname + ".csv", 'r') as read_obj
     # Pass reader object to list() to get a list of lists
     weightMatrix = [list(map(int,rec)) for rec in csv.reader(read_obj, delimiter=',')]
 H.indexEdges()
-moverSubtree = community.QuasiThresholdEditingLocalMover(H, init, 5, True, False, True, 5, True, 1, 1, weightMatrix)
+moverSubtree = community.QuasiThresholdEditingLocalMover(H, init, 400, True, True, True, 100, True, 1, 1, weightMatrix)
 moverSubtree.run()
 DSubtree = moverSubtree.getDynamicForestGraph()
 QSubtree = moverSubtree.getQuasiThresholdGraph()

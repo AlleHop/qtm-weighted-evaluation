@@ -31,7 +31,7 @@ for root, dirs, f in os.walk(path):
         df = seeds[0]
         for i in range(1, len(seeds)):
             df = pd.concat((df, seeds[i]), ignore_index = True)
-        output_df = df[(df['maxIterations'] == 400 ) &  (df['plateauSize'] == 100) ].drop(columns=['sortPaths','randomness','insertEditCost','removeEditCost', 'maxIterations', 'plateauSize'])
+        output_df = df[(df['maxIterations'] == 400 ) &  (df['plateauSize'] == 100) ].drop(columns=['insertEditCost','removeEditCost', 'maxIterations', 'plateauSize'])
         output_df = output_df[output_df.editsWeight == output_df.editsWeight.min()]
         output_df = output_df.iloc[[0]]
 

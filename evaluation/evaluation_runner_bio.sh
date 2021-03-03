@@ -3,9 +3,10 @@
 set -ex
 graph_sets='biological'
 #scenarios='full plateauBound withoutBucketQueue'
-scenarios='biomatrix'
+scenarios='biomatrix biosubtreeMove'
 #scenarios='full plateauBound'
 seeds='0 1 2 3 4 5 6 7 8 9'
+output_name='QTM_subtree'
 
 declare -A graphs
 graph_files=(["biological"]="bio_list.txt")
@@ -19,31 +20,32 @@ for graph_set in $graph_sets; do
       echo "$line"
       for seed in $seeds; do
         if [ $scenario == "weighted" ]; then
-          python3 python_scripts/evaluation_bio.py -g "${graph}.graph" -p "../output/QTM_bio/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
+          python3 python_scripts/evaluation_bio.py -g "${graph}.graph" -p "../output/${output_name}/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
         else
-          python3 python_scripts/evaluation_bio.py -g "${graph}.graph" -w "${graph}.csv" -p "../output/QTM_bio/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
+          python3 python_scripts/evaluation_bio.py -g "${graph}.graph" -w "${graph}.csv" -p "../output/${output_name}/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
         fi  
-    done
-    wait
+      done
+      wait
   done
-  python3 python_scripts/means.py -p "../output/QTM_bio/${graph_set}/temp_${scenario}/"
   wait
-  python3 python_scripts/minimum_editcost.py -p "../output/QTM_bio/${graph_set}/temp_${scenario}/"
+  python3 python_scripts/means.py -p "../output/${output_name}/${graph_set}/temp_${scenario}/"
   wait
-  python3 python_scripts/all.py -p "../output/QTM_bio/${graph_set}/temp_${scenario}/"
+  python3 python_scripts/minimum_editcost.py -p "../output/${output_name}/${graph_set}/temp_${scenario}/"
   wait
-  python3 python_scripts/calculate_variance.py -p "../output/QTM_bio/${graph_set}/temp_${scenario}/"
+  python3 python_scripts/all.py -p "../output/${output_name}/${graph_set}/temp_${scenario}/"
+  wait
+  python3 python_scripts/calculate_variance.py -p "../output/${output_name}/${graph_set}/temp_${scenario}/"
+  wait
+  python3 python_scripts/sort.py -p "../output/${output_name}/${graph_set}/"
+  wait
+  exact="../bio_exact_solution/bio-solutions.csv"
+  python3 python_scripts/compare_to_exact.py "../output/${output_name}/${graph_set}/sorted/${scenario}_minimum_sorted.csv" "${exact}"
   wait
   done
 done
-
-python3 python_scripts/sort.py -p "../output/QTM_bio/${graph_set}/"
+python3 performance/performance_plot.py -p "../output/${output_name}/${graph_set}/"
 wait
-python3 performance/performance_plot.py -p "../output/QTM_bio/${graph_set}/"
-wait
-exact="../bio_exact_solution/bio-solutions.csv"
 
-python3 python_scripts/compare_to_exact.py "../output/QTM_bio/${graph_set}/sorted/${scenario}_minimum_sorted.csv" "${exact}" &
 
 
 #limit=400

@@ -19,12 +19,26 @@ exact= args['exact']
 
 
 def algorithm_style(algorithm):
-    if "no-sort-no-random" in algorithm:
-        return ":"
-    if "no-sort-random" in algorithm:
-        return "-."
-    if "sort-no-random" in algorithm:
-        return "--"
+    #if "no-sort-no-random-subtree" in algorithm:
+    #   return "--"
+    #if "no-sort-no-random-no-subtree" in algorithm:
+    #   return "-."
+    #if "no-sort-random-subtree" in algorithm:
+    #    return "--"
+    #if "no-sort-random-no-subtree" in algorithm:
+    #   return "-."
+    #if "sort-no-random-subtree" in algorithm:
+    #   return "--"
+    #if "sort-no-random-no-subtree" in algorithm:
+    #   return "-."
+    #if "sort-random-subtree" in algorithm:
+    #  return ":"
+    #if "sort-random-no-subtree" in algorithm:
+    #   return "-"
+    if "no-subtree" in algorithm:
+        return "-"
+    if "subtree" in algorithm:
+       return ":"
     return "-"
 
 
@@ -131,6 +145,7 @@ def transform_input(df):
 if __name__ == '__main__':
     for result_name in [#'fb_results-all-aggregated.csv',
                         'biomatrix_all.csv',
+                        'biosubtreeMove_all.csv',
                         #'large_results-aggregated.csv',
                         #'generated_results-aggregated.csv'
                         ]:
@@ -143,8 +158,8 @@ if __name__ == '__main__':
             exact_solution['path'] = exact_solution['path'].str.replace("data/bio/", "").str.replace(".graph", "")
             exact_solution = exact_solution.rename({'path': 'graph'}, axis=1).drop(columns=['multiplier', 'permutation', 'edits', 'time_exact', 'forbidden_subgraphs', 'graph_index', 'solved'])
             exact_solution = exact_solution.set_index(['graph'])
-            print(exact_solution)
-            print(exact_solution[exact_solution['graph'] == 'bio-nr-3212-size-5'])
+            #print(exact_solution)
+            #print(exact_solution[exact_solution['graph'] == 'bio-nr-3212-size-5'])
         
         d = pd.read_csv(path + result_name)
         d['Best k'] = d.groupby(['graph'])['editsWeight'].transform(np.min)
@@ -177,7 +192,7 @@ if __name__ == '__main__':
                 continue
 
             filtered_df['exact'] = filtered_df.groupby(['graph'])['editsWeight'].transform(lambda x : exact_solution[x.name] if x.name in exact_solution else np.nan)
-            print(filtered_df)
+            #print(filtered_df)
             filtered_df['Best filtered k'] = filtered_df.groupby(['graph'])['editsWeight'].transform(np.min)
             assert ((filtered_df['Best filtered k'] <= filtered_df['editsWeight']) | filtered_df['editsWeight'].isna()).all()
             filtered_df['Best filtered unweighted k'] = filtered_df.groupby(['graph'])['edits'].transform(np.min)
@@ -192,7 +207,7 @@ if __name__ == '__main__':
             # filtered_df.loc[((filtered_df['Best k'] == 0) & (filtered_df['Edits'] > 0)), 'Perf. Ratio'] = 100
 
             plot_df = get_fraction_ratio_df(filtered_df)
-            print(plot_df['Ratio'].max())
+            #print(plot_df['Ratio'].max())
             if plot_df['Ratio'].max() > 3:
                 fig = plot_with_buckets(plot_df)
             else:

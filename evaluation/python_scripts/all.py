@@ -31,9 +31,19 @@ for root, dirs, f in os.walk(path):
         df = seeds[0]
         for i in range(1, len(seeds)):
             df = pd.concat((df, seeds[i]), ignore_index = True)
-        output_df = df[(df['maxIterations'] == 400 ) &  (df['plateauSize'] == 100) ].drop(columns=['sortPaths','randomness','insertEditCost','removeEditCost', 'maxIterations', 'plateauSize'])
+        output_df = df[(df['maxIterations'] == 400 ) &  (df['plateauSize'] == 100) ].drop(columns=['insertEditCost','removeEditCost', 'maxIterations', 'plateauSize'])
         output_df['initialization'] = 'QTM-weighted-' + output_df['initialization'].astype(str)
         output_df['initialization'] = output_df['initialization'].str.replace("_", "-")
+
+        #output_df['initialization'] = output_df['initialization'].astype(str) + output_df['sortPaths'].astype(str)
+        #output_df['initialization'] = output_df['initialization'].str.replace("False", "-no-sort").str.replace("True", "-sort")
+
+        #output_df['initialization'] = output_df['initialization'].astype(str) + output_df['sortPaths'].astype(str)
+        #output_df['initialization'] = output_df['initialization'].str.replace("False", "-no-random").str.replace("True", "-random")
+
+        output_df['initialization'] = output_df['initialization'].astype(str) + output_df['subtreeMove'].astype(str)
+        output_df['initialization'] = output_df['initialization'].str.replace("False", "-no-subtree").str.replace("True", "-subtree")
+
         output_df = output_df.rename({'initialization': 'algorithm'}, axis=1)
         del output_df['Unnamed: 0']
         result.append(output_df)
