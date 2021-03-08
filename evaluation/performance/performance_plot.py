@@ -144,7 +144,7 @@ def transform_input(df):
 
 if __name__ == '__main__':
     for result_name in [#'fb_results-all-aggregated.csv',
-                        'biomatrix_all.csv',
+                        #'biomatrix_all.csv',
                         'biosubtreeMove_all.csv',
                         'bioweighted_all.csv',
                         #'large_results-aggregated.csv',
