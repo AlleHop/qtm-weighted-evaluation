@@ -3,7 +3,7 @@
 set -ex
 graph_sets='biological'
 #scenarios='full plateauBound withoutBucketQueue'
-scenarios='biosubtreeMove bioweighted'
+scenarios='biosubtreeMove biounweighted'
 #scenarios='full plateauBound'
 seeds='0 1 2 3 4 5 6 7 8 9'
 output_name='QTM_subtree'
@@ -19,7 +19,7 @@ for graph_set in $graph_sets; do
     do
       echo "$line"
       for seed in $seeds; do
-        if [ $scenario == "bioweighted" ]; then
+        if [ $scenario == "bioweighted" -o $scenario == "biounweighted" ]; then
           python3 python_scripts/evaluation_bio.py -g "${graph}.graph" -p "../output/${output_name}/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &
         else
           python3 python_scripts/evaluation_bio.py -g "${graph}.graph" -w "${graph}.csv" -p "../output/${output_name}/${graph_set}/temp_${scenario}/" -s ${scenario} -r ${seed} &

@@ -12,7 +12,7 @@ import errno
 parser = argparse.ArgumentParser(prog='evaluation_bio.py')
 parser.add_argument('-g', '--graph_name')
 parser.add_argument('-p', '--path')
-parser.add_argument('-s', '--scenario', choices=['bioweighted', 'biomatrix', 'biosubtreeMove'])
+parser.add_argument('-s', '--scenario', choices=['bioweighted', 'biounweighted', 'biomatrix', 'biosubtreeMove'])
 parser.add_argument('-r', '--random_seed', type=int)
 parser.add_argument('-o', '--overwrite', action='store_true')
 parser.add_argument('-w', '--weights')
@@ -99,7 +99,7 @@ def runOnGraph(graph_name, df):
                                 df = executeMover(G, name, init, sort, random, subtree, 0, maxIterations, df, insert, remove, weightMatrix)
     return df
 
-if(scenario == 'bioweighted'):
+if(scenario == 'biounweighted'):
     initializations = [0, 1, 2, 3]
     maxIterations = [400]
     sortPaths = [True]
@@ -108,6 +108,18 @@ if(scenario == 'bioweighted'):
     b_queue = False
     insertEditCosts = [1]
     removeEditCosts = [1]
+    subtreeMove = [False, True]
+    weightMatrix = []
+    editMatrixUsed = False
+if(scenario == 'bioweighted'):
+    initializations = [0, 1, 2, 3]
+    maxIterations = [400]
+    sortPaths = [True]
+    randomness = [True]
+    plateauSize = [100]
+    b_queue = False
+    insertEditCosts = [1,2]
+    removeEditCosts = [1,2]
     subtreeMove = [False, True]
     weightMatrix = []
     editMatrixUsed = False
