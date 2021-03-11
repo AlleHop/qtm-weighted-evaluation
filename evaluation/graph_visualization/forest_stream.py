@@ -6,13 +6,18 @@ parser = argparse.ArgumentParser(prog='forest_stream.py')
 parser.add_argument('-n', '--name', help='name of bio graph')
 parser.add_argument('-s', '--seed', help='random seed', default=0, type=int)
 parser.add_argument('-i', '--init', help='initialisation of algo', default=0, type=int)
+parser.add_argument('--subtree', dest='subtree', action='store_true')
+parser.add_argument('--no-subtree', dest='subtree', action='store_false')
+parser.set_defaults(subtree=True)
 
-args = vars(parser.parse_args())
-bioname = args['name']
-seed = args['seed']
-init = args['init']
+args = parser.parse_args()
+bioname = args.name
+seed = args.seed
+init = args.init
+subtree = args.subtree
 print("seed: ", seed)
 print("init: ", init)
+print("subtree: ", subtree)
 
 setSeed(seed, False)
 
@@ -24,7 +29,7 @@ with open("../../input/biological/weights/" + bioname + ".csv", 'r') as read_obj
     # Pass reader object to list() to get a list of lists
     weightMatrix = [list(map(int,rec)) for rec in csv.reader(read_obj, delimiter=',')]
 G.indexEdges()
-mover = community.QuasiThresholdEditingLocalMover(G, init, 400, True, True, False, 100, True, 1, 1, weightMatrix)
+mover = community.QuasiThresholdEditingLocalMover(G, init, 400, True, True, subtree, 100, True, 1, 1, weightMatrix)
 mover.run()
 D = mover.getDynamicForestGraph()
 Q = mover.getQuasiThresholdGraph()
@@ -47,7 +52,7 @@ with open("../../input/optimization/weights/" + bioname + "-opt.csv", 'r') as re
     # Pass reader object to list() to get a list of lists
     weightMatrix = [list(map(int,rec)) for rec in csv.reader(read_obj, delimiter=',')]
 H.indexEdges()
-moverOpt = community.QuasiThresholdEditingLocalMover(H, init, 400, True, True, False, 100, True, 1, 1, weightMatrix)
+moverOpt = community.QuasiThresholdEditingLocalMover(H, init, 400, True, True, subtree, 100, True, 1, 1, weightMatrix)
 moverOpt.run()
 DOpt = moverOpt.getDynamicForestGraph()
 QOpt = moverOpt.getQuasiThresholdGraph()

@@ -1,4 +1,4 @@
-get ouput: sudo scp -r dschmitt@i11ssh.iti.kit.edu:~/david_master_thesis/workspace/qtm-weighted-evaluation/output /home/david/Documents/KIT/Masterarbeit/Workspace/remote_output
+get ouput: scp -r dschmitt@i11ssh.iti.kit.edu:~/david_master_thesis/workspace/qtm-weighted-evaluation/output /home/david/Documents/KIT/Masterarbeit/Workspace/remote_output
 
 ssh dschmitt@i11ssh.iti.kit.edu
 ssh compute12.iti.kit.edu

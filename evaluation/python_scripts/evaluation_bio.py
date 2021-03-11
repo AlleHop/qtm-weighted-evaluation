@@ -39,11 +39,21 @@ def getInitName(i):
     if (i == 3):
         return 'asc-min-init'
 
+def randomize_graph(graph):
+    idmap = nk.graphtools.getRandomContinuousNodeIds(graph)
+    gr = nk.graphtools.getCompactedGraph(graph, idmap)
+    gr.sortEdges()
+    gr.indexEdges()
+    return gr
+
 def executeMover (G, graph_name, init, sortPath, random, subtreeMove, maxPlateau, maxIterations, df, insertEditCost, removeEditCost, weightMatrix):
+    nk.setSeed(seed, False)
+    #randomized_graph = randomize_graph(G)
+    randomized_graph = G
     if(weightMatrix == None):
-        mover = nk.community.QuasiThresholdEditingLocalMover(G, init, max(maxIterations), sortPath, random, subtreeMove, maxPlateau, True, insertEditCost, removeEditCost)
+        mover = nk.community.QuasiThresholdEditingLocalMover(randomized_graph, init, max(maxIterations), sortPath, random, subtreeMove, maxPlateau, True, insertEditCost, removeEditCost)
     else:
-        mover = nk.community.QuasiThresholdEditingLocalMover(G, init, max(maxIterations), sortPath, random, subtreeMove, maxPlateau, True, 1, 1, weightMatrix)
+        mover = nk.community.QuasiThresholdEditingLocalMover(randomized_graph, init, max(maxIterations), sortPath, random, subtreeMove, maxPlateau, True, 1, 1, weightMatrix)
     a = timeit.default_timer()
     mover.run()
     delta = timeit.default_timer() - a
@@ -64,6 +74,8 @@ def executeMover (G, graph_name, init, sortPath, random, subtreeMove, maxPlateau
         editsWeight = editsWeightDevelopement[u]      
         df.loc[i] = [graph_name, G.numberOfNodes(), seed, getInitName(init), m, sortPath, random, subtreeMove, maxPlateau, insertEditCost, removeEditCost, edits, editsWeight, u, actualPlateau, time]
         i += 1
+    del mover
+    del randomized_graph
     return df
 
 def runOnGraph(graph_name, df):
