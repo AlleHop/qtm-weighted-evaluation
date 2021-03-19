@@ -8,7 +8,7 @@ import argparse
 
 
 parser = argparse.ArgumentParser(prog='statistic.py')
-parser.add_argument('-path', '--path')
+parser.add_argument('-p', '--path')
 
 args = vars(parser.parse_args())
 path = args['path']
