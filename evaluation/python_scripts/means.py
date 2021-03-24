@@ -30,7 +30,7 @@ for root, dirs, f in os.walk(path):
         input_df = dfs[0]
         output_df = dfs[1]
         for i in range(1, len(filenames)):
-            df = np.split(pd.read_csv(path + '/' + dir +'/'+ filenames[i]), [11], axis=1)[1]
+            df = np.split(pd.read_csv(path + '/' + dir +'/'+ filenames[i]), [13], axis=1)[1]
             output_df = output_df.add(df, fill_value=0)            
         for col in output_df.columns:
             output_df[col] *= 1/len(filenames)

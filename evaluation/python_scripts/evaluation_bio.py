@@ -46,14 +46,14 @@ def randomize_graph(graph):
     gr.indexEdges()
     return gr
 
-def executeMover (G, graph_name, init, sortPath, random, subtreeMove, maxPlateau, maxIterations, df, insertEditCost, removeEditCost, weightMatrix):
+def executeMover (G, graph_name, init, sortPath, random, subtreeMove, subtreeSortPath, maxPlateau, maxIterations, df, insertEditCost, removeEditCost, weightMatrix):
     nk.setSeed(seed, False)
     #randomized_graph = randomize_graph(G)
     randomized_graph = G
     if(weightMatrix == None):
-        mover = nk.community.QuasiThresholdEditingLocalMover(randomized_graph, init, max(maxIterations), sortPath, random, subtreeMove, maxPlateau, True, insertEditCost, removeEditCost)
+        mover = nk.community.QuasiThresholdEditingLocalMover(randomized_graph, init, max(maxIterations), sortPath, random, subtreeMove, subtreeSortPath, maxPlateau, True, insertEditCost, removeEditCost)
     else:
-        mover = nk.community.QuasiThresholdEditingLocalMover(randomized_graph, init, max(maxIterations), sortPath, random, subtreeMove, maxPlateau, True, 1, 1, weightMatrix)
+        mover = nk.community.QuasiThresholdEditingLocalMover(randomized_graph, init, max(maxIterations), sortPath, random, subtreeMove, subtreeSortPath, maxPlateau, True, 1, 1, weightMatrix)
     a = timeit.default_timer()
     mover.run()
     delta = timeit.default_timer() - a
@@ -72,7 +72,7 @@ def executeMover (G, graph_name, init, sortPath, random, subtreeMove, maxPlateau
         u = min(m, usedIterations)
         edits = editsDevelopement[u]
         editsWeight = editsWeightDevelopement[u]      
-        df.loc[i] = [graph_name, G.numberOfNodes(), seed, getInitName(init), m, sortPath, random, subtreeMove, maxPlateau, insertEditCost, removeEditCost, edits, editsWeight, u, actualPlateau, time]
+        df.loc[i] = [graph_name, G.numberOfNodes(), seed, getInitName(init), m, sortPath, random, subtreeMove, subtreeSortPath, maxPlateau, insertEditCost, removeEditCost, edits, editsWeight, u, actualPlateau, time]
         i += 1
     del mover
     del randomized_graph
@@ -106,9 +106,17 @@ def runOnGraph(graph_name, df):
                         for random in randomness:
                             if(random):
                                 for plateau in plateauSize:
-                                    df = executeMover(G, name, init, sort, random, subtree, plateau, maxIterations, df, insert, remove, weightMatrix)
+                                    if(subtree):
+                                        for subtreeSort in subtreeSortPaths:
+                                            df = executeMover(G, name, init, sort, random, subtree, subtreeSort, plateau, maxIterations, df, insert, remove, weightMatrix)
+                                    else:
+                                        df = executeMover(G, name, init, sort, random, subtree, False, plateau, maxIterations, df, insert, remove, weightMatrix)
                             else:
-                                df = executeMover(G, name, init, sort, random, subtree, 0, maxIterations, df, insert, remove, weightMatrix)
+                                if(subtree):
+                                    for subtreeSort in subtreeSortPaths:
+                                        df = executeMover(G, name, init, sort, random, subtree, subtreeSort, 0, maxIterations, df, insert, remove, weightMatrix)
+                                else:
+                                    df = executeMover(G, name, init, sort, random, subtree, False, 0, maxIterations, df, insert, remove, weightMatrix)
     return df
 
 if(scenario == 'biounweighted'):
@@ -121,6 +129,7 @@ if(scenario == 'biounweighted'):
     insertEditCosts = [1]
     removeEditCosts = [1]
     subtreeMove = [False, True]
+    subtreeSortPaths = [False, True]
     weightMatrix = []
     editMatrixUsed = False
 if(scenario == 'bioweighted'):
@@ -133,6 +142,7 @@ if(scenario == 'bioweighted'):
     insertEditCosts = [1,2]
     removeEditCosts = [1,2]
     subtreeMove = [False, True]
+    subtreeSortPaths = [False, True]
     weightMatrix = []
     editMatrixUsed = False
 if(scenario == 'biomatrix'):
@@ -145,6 +155,7 @@ if(scenario == 'biomatrix'):
     insertEditCosts = [1]
     removeEditCosts = [1]
     subtreeMove = [False]
+    subtreeSortPaths = [False]
     weightMatrix = []
     editMatrixUsed = True
 
@@ -158,6 +169,7 @@ if(scenario == 'biosubtreeMove'):
     insertEditCosts = [1]
     removeEditCosts = [1]
     subtreeMove = [False, True]
+    subtreeSortPaths = [False, True]
     weightMatrix = []
     editMatrixUsed = True
 
@@ -169,6 +181,7 @@ df = pd.DataFrame(columns  = ['graph',
                               'sortPaths',
                               'randomness',
                               'subtreeMove',
+                              'subtreeSortPaths',
                               'plateauSize',
                               'insertEditCost',
                               'removeEditCost',

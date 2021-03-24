@@ -35,6 +35,8 @@ def algorithm_style(algorithm):
     #  return ":"
     #if "sort-random-no-subtree" in algorithm:
     #   return "-"
+    if "sort" in algorithm:
+        return "-."
     if "no-subtree" in algorithm:
         return "-"
     if "subtree" in algorithm:

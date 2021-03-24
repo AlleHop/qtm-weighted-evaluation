@@ -47,6 +47,9 @@ for root, dirs, f in os.walk(path):
         output_df['initialization'] = output_df['initialization'].astype(str) + output_df['subtreeMove'].astype(str)
         output_df['initialization'] = output_df['initialization'].str.replace("False", "-no-subtree").str.replace("True", "-subtree")
 
+        output_df['initialization'] = output_df['initialization'].astype(str) + output_df['subtreeSortPaths'].astype(str)
+        output_df['initialization'] = output_df['initialization'].str.replace("False", "").str.replace("True", "-sort")
+
         output_df = output_df.rename({'initialization': 'algorithm'}, axis=1)
         del output_df['Unnamed: 0']
         result.append(output_df)
