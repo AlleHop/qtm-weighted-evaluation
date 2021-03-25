@@ -44,7 +44,7 @@ def algorithm_style(algorithm):
     return "-"
 
 
-my_algo_colors = sns.color_palette(n_colors=5)
+my_algo_colors = sns.color_palette(n_colors=6)
 
 
 def algorithm_color(algorithm):
@@ -58,6 +58,8 @@ def algorithm_color(algorithm):
         return my_algo_colors[0]
     if "rand-min-init" in algorithm:
         return my_algo_colors[4]
+    if "rand-tree" in algorithm:
+        return my_algo_colors[5]
     assert False
 
 

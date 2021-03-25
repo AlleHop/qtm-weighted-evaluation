@@ -12,7 +12,7 @@ import errno
 parser = argparse.ArgumentParser(prog='evaluation_bio.py')
 parser.add_argument('-g', '--graph_name')
 parser.add_argument('-p', '--path')
-parser.add_argument('-s', '--scenario', choices=['bioweighted', 'biounweighted', 'biomatrix', 'biosubtreeMove'])
+parser.add_argument('-s', '--scenario', choices=['bioweighted', 'biounweighted', 'biomatrix', 'biosubtreeMove', 'biorandtreeinit'])
 parser.add_argument('-r', '--random_seed', type=int)
 parser.add_argument('-o', '--overwrite', action='store_true')
 parser.add_argument('-w', '--weights')
@@ -38,6 +38,8 @@ def getInitName(i):
         return 'rand-min-init'
     if (i == 3):
         return 'asc-min-init'
+    if (i == 6):
+        return 'rand-tree'
 
 def randomize_graph(graph):
     idmap = nk.graphtools.getRandomContinuousNodeIds(graph)
@@ -161,6 +163,20 @@ if(scenario == 'biomatrix'):
 
 if(scenario == 'biosubtreeMove'):
     initializations = [0, 1, 2, 3]
+    maxIterations = [400]
+    sortPaths = [True]
+    randomness = [True]
+    plateauSize = [100]
+    b_queue = False
+    insertEditCosts = [1]
+    removeEditCosts = [1]
+    subtreeMove = [False, True]
+    subtreeSortPaths = [False, True]
+    weightMatrix = []
+    editMatrixUsed = True
+
+if(scenario == 'biorandtreeinit'):
+    initializations = [0, 1, 2, 3, 6]
     maxIterations = [400]
     sortPaths = [True]
     randomness = [True]
