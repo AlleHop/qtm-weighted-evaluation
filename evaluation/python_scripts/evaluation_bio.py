@@ -131,7 +131,7 @@ if(scenario == 'biounweighted'):
     insertEditCosts = [1]
     removeEditCosts = [1]
     subtreeMove = [False, True]
-    subtreeSortPaths = [False]
+    subtreeSortPaths = [False, True]
     weightMatrix = []
     editMatrixUsed = False
 if(scenario == 'bioweighted'):
@@ -171,7 +171,7 @@ if(scenario == 'biosubtreeMove'):
     insertEditCosts = [1]
     removeEditCosts = [1]
     subtreeMove = [False, True]
-    subtreeSortPaths = [False]
+    subtreeSortPaths = [False, True]
     weightMatrix = []
     editMatrixUsed = True
 

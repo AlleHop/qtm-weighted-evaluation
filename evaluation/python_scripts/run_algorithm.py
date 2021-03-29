@@ -1,6 +1,7 @@
 from networkit import *
 import numpy as np
 import argparse
+import quasithresholdeditingContractMover
 
 parser = argparse.ArgumentParser(prog='forest_stream.py')
 parser.add_argument('-n', '--name', help='name of bio graph')
@@ -32,8 +33,10 @@ with open("../../input/biological/weights/" + bioname + ".csv", 'r') as read_obj
     # Pass reader object to list() to get a list of lists
     weightMatrix = [list(map(int,rec)) for rec in csv.reader(read_obj, delimiter=',')]
 G.indexEdges()
-mover = community.QuasiThresholdEditingLocalMover(G, init, iterations, True, True, subtree, 100, True, 1, 1, weightMatrix)
-mover.run()
+#quasithresholdeditingContractMover.contractNodes(G, weightMatrix, [2,21,20])
+#mover = community.QuasiThresholdEditingLocalMover(G, init, iterations, True, True, subtree, False, 100, True, 1, 1, weightMatrix)
+#mover.run()
+mover = quasithresholdeditingContractMover.contractMover(G, init, True, True, subtree, False, 100, iterations, True, 1, 1, weightMatrix)
 D = mover.getDynamicForestGraph()
 Q = mover.getQuasiThresholdGraph()
 edits = mover.getRunningInfo()[b'edits']
