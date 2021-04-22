@@ -60,7 +60,7 @@ def executeMover (G, graph_name, init, sortPath, random, subtreeMove, subtreeSor
     mover.run()
     delta = timeit.default_timer() - a
     edits = mover.getNumberOfEdits()
-    editsWeight = mover.getWeightOfEdits()
+    editsWeight = mover.getCostOfEdits()
     usedIterations = mover.getUsedIterations()
     time = delta * 1000
     if(random):
@@ -69,7 +69,7 @@ def executeMover (G, graph_name, init, sortPath, random, subtreeMove, subtreeSor
         actualPlateau = 0
     i = len(df.index)
     editsDevelopement = mover.getRunningInfo()[b'edits']
-    editsWeightDevelopement = mover.getRunningInfo()[b'edits_weight']
+    editsWeightDevelopement = mover.getRunningInfo()[b'edit_costs']
     for m in maxIterations:
         u = min(m, usedIterations)
         edits = editsDevelopement[u]
