@@ -1,4 +1,4 @@
-graph_index,graph,solved,solution_cost,QTM k
+graph_index,graph,solved,solution_cost,qtm_base
 1,bio-nr-1-size-9,True,1,1
 2,bio-nr-2-size-10,True,0,0
 3,bio-nr-3-size-16,True,5,5

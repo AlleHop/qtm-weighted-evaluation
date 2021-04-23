@@ -38,8 +38,13 @@ for graph_set in $graph_sets; do
   wait
   python3 python_scripts/sort.py -p "../output/${output_name}/${graph_set}/"
   wait
-  exact="../bio_exact_solution/bio-solutions.csv"
-  python3 python_scripts/compare_to_exact.py "../output/${output_name}/${graph_set}/sorted/${scenario}_minimum_sorted.csv" "${exact}"
+  if [ $scenario == "biounweighted" ]; then
+    exact="../bio_exact_solution/bio-solutions-unweighted.csv"
+    python3 python_scripts/compare_to_exact_unweighted.py "../output/${output_name}/${graph_set}/sorted/${scenario}_minimum_sorted.csv" "${exact}"
+  else
+    exact="../bio_exact_solution/bio-solutions.csv"
+    python3 python_scripts/compare_to_exact.py "../output/${output_name}/${graph_set}/sorted/${scenario}_minimum_sorted.csv" "${exact}"
+  fi
   wait
   done
 done
