@@ -1,9 +1,6 @@
-import sys, getopt
 import os
 import networkit as nk
-import timeit
 import pandas as pd
-import numpy as np
 import argparse
 
 

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-import math
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Convert metis .graph files to csv weight files')

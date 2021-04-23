@@ -1,5 +1,4 @@
 from networkit import *
-import numpy as np
 import argparse
 import quasithresholdeditingContractMover
 

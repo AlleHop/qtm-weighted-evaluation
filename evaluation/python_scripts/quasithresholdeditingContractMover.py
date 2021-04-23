@@ -1,8 +1,5 @@
 import networkit as nk
-import timeit
 import pandas as pd
-import numpy as np
-import errno
 
 
 def contractMover (G, init, sortPath, random, subtreeMove, subtreeSortPath, maxPlateau, maxIterations,bucketQueue, insertEditCost, removeEditCost, weightMatrix):

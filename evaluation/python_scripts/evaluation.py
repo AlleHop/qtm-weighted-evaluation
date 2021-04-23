@@ -1,4 +1,3 @@
-import sys, getopt
 import os
 import networkit as nk
 import timeit
