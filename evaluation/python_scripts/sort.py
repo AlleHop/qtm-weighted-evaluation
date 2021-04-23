@@ -22,7 +22,7 @@ for file in os.listdir(path):
         df.insert(0,'graph_index', index)
         output_df = df.sort_values('graph_index')
         output_df = output_df.set_index(['graph_index'])
-        #del output_df['Unnamed: 0']
+        del output_df['Unnamed: 0']
         #print(output_df)
         if not os.path.exists(output_path):
             os.makedirs(output_path)
