@@ -38,10 +38,7 @@ for index, row in output_df.iterrows():
             output_df['ratio'][index]= 1
     else:
         ratio = output_df['editsWeight'][index] / output_df['solution_cost'][index] 
-        if(ratio< 1):
-            output_df['ratio'][index] = 1
-        else:
-            output_df['ratio'][index] = ratio
+        output_df['ratio'][index] = ratio
 output_df.to_csv(".." + qtm.strip(".csv") + '_compare.csv', sep=',', encoding='utf-8')
 
 
