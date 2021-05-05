@@ -87,7 +87,7 @@ def runOnGraph(graph_name, df):
         G = nk.graphio.readMat(input_path + graph_name, key="A")
     if(graph_name.split('.')[-1] == "graph"):
         G = nk.readGraph(graph_path, nk.Format.METIS)
-    if(graph_name.split('.')[-1] == "edgelist"):
+    if(graph_name.split('.')[-1] == "txt"):
         G = nk.readGraph(graph_path, nk.Format.SNAP, continuous=False, directed=False)
     if(graph_name.split('.')[-1] == "pairs"):
         G = nk.readGraph(graph_path, nk.Format.SNAP)

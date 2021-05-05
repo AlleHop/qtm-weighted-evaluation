@@ -50,27 +50,3 @@ for graph_set in $graph_sets; do
 done
 python3 performance/performance_plot.py -p "../output/${output_name}/${graph_set}/"
 wait
-
-
-
-#limit=400
-#input="bio${limit}.txt"
-#scenario='full'
-#while IFS= read -r graph
-#do
-#  for seed in $seeds; do
-#    python3 evaluation.py -g ${graph} -p "../output/QTM_3/biological${limit}/temp_${scenario}/" -s ${scenario} -r ${seed} &
-#  done
-#  wait
-#done < "$input"
-#python3 means.py -p "../output/QTM_3/biological${limit}/temp_${scenario}/"
-
-#scenario='plateauBound'
-#while IFS= read -r graph
-#do
-#  for seed in $seeds; do
-#    python3 evaluation.py -g ${graph} -p "../output/QTM_3/biological${limit}/temp_${scenario}/" -s ${scenario} -r ${seed} &
-#  done
-#  wait
-#done < "$input"
-#python3 means.py -p "../output/QTM_3/biological${limit}/temp_${scenario}/"
