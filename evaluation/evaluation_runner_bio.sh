@@ -8,12 +8,13 @@ scenarios='biosubtreeMove biounweighted'
 seeds='0 1 2 3 4 5 6 7 8 9'
 output_name='QTM_subtree'
 
-declare -A graphs
-graph_files=(["biological"]="bio_list.txt")
+declare -A graph_files
+graph_files=(["biological"]="graph_lists/bio_list.txt")
 
 for graph_set in $graph_sets; do
   for scenario in $scenarios; do
-    input="graph_lists/bio_list.txt"
+    #input="graph_lists/bio_list1.txt"
+    input=${graph_files[$graph_set]}
     echo "$input"
     paste -d@ $input $input | while IFS="@" read -r graph f2
     do

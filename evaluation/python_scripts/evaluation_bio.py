@@ -83,8 +83,8 @@ def runOnGraph(graph_name, df):
     name = graph_name.split('/')[-1].split('.')[0]
     i = len(df.index)
     graph_path = input_path + graph_name
-    if(graph_name.split('/')[0] ==  "facebook100"):
-        G = nk.graphio.readMat(input_path + graph_name, key="A")
+    if(graph_name.split('.')[-1] ==  "mat"):
+        G = nk.graphio.readMat(graph_path, key="A")
     if(graph_name.split('.')[-1] == "graph"):
         G = nk.readGraph(graph_path, nk.Format.METIS)
     if(graph_name.split('.')[-1] == "txt"):
