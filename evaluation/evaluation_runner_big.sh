@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -ex
-graph_sets='small social roadnetwork facebook'
+graph_sets='facebook social'
 #scenarios='full plateauBound withoutBucketQueue'
 scenarios='unweighted'
 #scenarios='full plateauBound'
