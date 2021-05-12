@@ -31,7 +31,7 @@ for root, dirs, f in os.walk(path):
         if "unweighted" in filenames[i]:
             output_df['initialization'] = 'QTM-' + output_df['initialization'].astype(str)
         else:
-            output_df['initialization'] = 'QTM-weighted-' + output_df['initialization'].astype(str)
+            output_df['initialization'] = 'QTM-nonuniform-' + output_df['initialization'].astype(str)
         output_df['initialization'] = output_df['initialization'].str.replace("_", "-")
 
         #output_df['initialization'] = output_df['initialization'].astype(str) + output_df['sortPaths'].astype(str)
