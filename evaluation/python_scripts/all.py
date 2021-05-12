@@ -27,7 +27,7 @@ for root, dirs, f in os.walk(path):
         df = seeds[0]
         for i in range(1, len(seeds)):
             df = pd.concat((df, seeds[i]), ignore_index = True)
-        output_df = df[(df['maxIterations'] == 400 ) &  (df['plateauSize'] == 100) ].drop(columns=['insertEditCost','removeEditCost', 'maxIterations', 'plateauSize'])
+        output_df = df[(df['maxIterations'] == 50 ) &  (df['plateauSize'] == 50) ].drop(columns=['insertEditCost','removeEditCost', 'maxIterations', 'plateauSize'])
         if "unweighted" in filenames[i]:
             output_df['initialization'] = 'QTM-' + output_df['initialization'].astype(str)
         else:
