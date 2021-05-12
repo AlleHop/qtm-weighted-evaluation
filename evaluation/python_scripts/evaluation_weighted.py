@@ -124,10 +124,10 @@ def runOnGraph(graph_name, df):
 
 if(scenario == 'unweighted'):
     initializations = [0, 1, 2, 3]
-    maxIterations = [400]
+    maxIterations = [50]
     sortPaths = [True]
     randomness = [True]
-    plateauSize = [100]
+    plateauSize = [50]
     b_queue = False
     insertEditCosts = [1]
     removeEditCosts = [1]
@@ -138,10 +138,10 @@ if(scenario == 'unweighted'):
 
 if(scenario == 'weighted'):
     initializations = [0, 1, 2, 3]
-    maxIterations = [400]
+    maxIterations = [50]
     sortPaths = [True]
     randomness = [True]
-    plateauSize = [100]
+    plateauSize = [50]
     b_queue = False
     insertEditCosts = [1,2]
     removeEditCosts = [1,2]
