@@ -126,7 +126,6 @@ if(scenario == 'biounweighted'):
     sortPaths = [True]
     randomness = [True]
     plateauSize = [100]
-    b_queue = False
     insertEditCosts = [1]
     removeEditCosts = [1]
     subtreeMove = [False, True]
@@ -139,7 +138,6 @@ if(scenario == 'bioweighted'):
     sortPaths = [True]
     randomness = [True]
     plateauSize = [100]
-    b_queue = False
     insertEditCosts = [1,2]
     removeEditCosts = [1,2]
     subtreeMove = [False, True]
@@ -152,7 +150,6 @@ if(scenario == 'biomatrix'):
     sortPaths = [True]
     randomness = [True]
     plateauSize = [100]
-    b_queue = False
     insertEditCosts = [1]
     removeEditCosts = [1]
     subtreeMove = [False]
@@ -166,7 +163,6 @@ if(scenario == 'biosubtreeMove'):
     sortPaths = [True]
     randomness = [True]
     plateauSize = [100]
-    b_queue = False
     insertEditCosts = [1]
     removeEditCosts = [1]
     subtreeMove = [False, True]
@@ -180,7 +176,6 @@ if(scenario == 'biorandtreeinit'):
     sortPaths = [True]
     randomness = [True]
     plateauSize = [100]
-    b_queue = False
     insertEditCosts = [1]
     removeEditCosts = [1]
     subtreeMove = [False, True]

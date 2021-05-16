@@ -11,7 +11,7 @@ import errno
 parser = argparse.ArgumentParser(prog='evaluation_bio.py')
 parser.add_argument('-g', '--graph_name')
 parser.add_argument('-p', '--path')
-parser.add_argument('-s', '--scenario', choices=['weighted', 'unweighted'])
+parser.add_argument('-s', '--scenario', choices=['ratio', 'unweighted'])
 parser.add_argument('-r', '--random_seed', type=int)
 parser.add_argument('-o', '--overwrite', action='store_true')
 parser.add_argument('-w', '--weights')
@@ -104,22 +104,23 @@ def runOnGraph(graph_name, df):
     for subtree in subtreeMove:
         for insert in insertEditCosts:
             for remove in removeEditCosts:
-                for init in initializations:
-                    for sort in sortPaths:
-                        for random in randomness:
-                            if(random):
-                                for plateau in plateauSize:
+                if insert != remove or (scenario != 'ratio'):
+                    for init in initializations:
+                        for sort in sortPaths:
+                            for random in randomness:
+                                if(random):
+                                    for plateau in plateauSize:
+                                        if(subtree):
+                                            for subtreeSort in subtreeSortPaths:
+                                                df = executeMover(G, name, init, sort, random, subtree, subtreeSort, plateau, maxIterations, df, insert, remove, weightMatrix)
+                                        else:
+                                            df = executeMover(G, name, init, sort, random, subtree, False, plateau, maxIterations, df, insert, remove, weightMatrix)
+                                else:
                                     if(subtree):
                                         for subtreeSort in subtreeSortPaths:
-                                            df = executeMover(G, name, init, sort, random, subtree, subtreeSort, plateau, maxIterations, df, insert, remove, weightMatrix)
+                                            df = executeMover(G, name, init, sort, random, subtree, subtreeSort, 0, maxIterations, df, insert, remove, weightMatrix)
                                     else:
-                                        df = executeMover(G, name, init, sort, random, subtree, False, plateau, maxIterations, df, insert, remove, weightMatrix)
-                            else:
-                                if(subtree):
-                                    for subtreeSort in subtreeSortPaths:
-                                        df = executeMover(G, name, init, sort, random, subtree, subtreeSort, 0, maxIterations, df, insert, remove, weightMatrix)
-                                else:
-                                    df = executeMover(G, name, init, sort, random, subtree, False, 0, maxIterations, df, insert, remove, weightMatrix)
+                                        df = executeMover(G, name, init, sort, random, subtree, False, 0, maxIterations, df, insert, remove, weightMatrix)
     return df
 
 if(scenario == 'unweighted'):
@@ -128,7 +129,6 @@ if(scenario == 'unweighted'):
     sortPaths = [True]
     randomness = [True]
     plateauSize = [50]
-    b_queue = False
     insertEditCosts = [1]
     removeEditCosts = [1]
     subtreeMove = [False, True]
@@ -136,17 +136,16 @@ if(scenario == 'unweighted'):
     weightMatrix = []
     editMatrixUsed = False
 
-if(scenario == 'weighted'):
-    initializations = [0, 1, 2, 3]
+if(scenario == 'ratio'):
+    initializations = [0, 1]
     maxIterations = [50]
     sortPaths = [True]
     randomness = [True]
     plateauSize = [50]
-    b_queue = False
     insertEditCosts = [1,2]
     removeEditCosts = [1,2]
     subtreeMove = [False, True]
-    subtreeSortPaths = [False]
+    subtreeSortPaths = [True, False]
     weightMatrix = []
     editMatrixUsed = False
 

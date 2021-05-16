@@ -3,7 +3,7 @@
 set -ex
 graph_sets='facebook social'
 #scenarios='full plateauBound withoutBucketQueue'
-scenarios='unweighted'
+scenarios='ratio'
 #scenarios='full plateauBound'
 seeds='0 1 2 3 4 5 6 7 8 9'
 output_name='QTM_big'
@@ -42,8 +42,6 @@ for graph_set in $graph_sets; do
   python3 python_scripts/all.py -p "../output/${output_name}/${graph_set}/temp_${scenario}/"
   wait
   python3 python_scripts/calculate_variance.py -p "../output/${output_name}/${graph_set}/temp_${scenario}/"
-  wait
-  python3 python_scripts/sort.py -p "../output/${output_name}/${graph_set}/"
   wait
   done
 done

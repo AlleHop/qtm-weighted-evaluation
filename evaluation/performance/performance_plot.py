@@ -149,13 +149,15 @@ def transform_input(df):
 if __name__ == '__main__':
     for result_name in [#'fb_results-all-aggregated.csv',
                         #'biomatrix_all.csv',
-                        'biosubtreeMove_all.csv',
+                        #'biosubtreeMove_all.csv',
                         #'bioweighted_all.csv',
-                        'biounweighted_all.csv',
+                        #'biounweighted_all.csv',
+                        #'unweighted_all.csv',
+                        'ratio_all.csv',
                         #'large_results-aggregated.csv',
                         #'generated_results-aggregated.csv'
-                        ]:
-                        # 'bio_with_20_iterations.csv']:
+                        # 'bio_with_20_iterations.csv'
+                    ]:
         d = { 'graph':['none'], 'solution_cost':[-1]}
         exact_solution = pd.DataFrame(d,columns=['graph','solution_cost'])
 
