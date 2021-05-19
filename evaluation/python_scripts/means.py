@@ -23,15 +23,20 @@ for root, dirs, f in os.walk(path):
             continue
         output_name = '_'.join(filenames[0].split('_')[1:-1]) + '_mean.csv'
         df = pd.read_csv(path + '/' + dir +'/'+ filenames[0])
-        dfs = np.split(df, [11], axis=1)
+        df = df[df.iteration +1 == df.usedIterations]
+        dfs = np.split(df, [14], axis=1)
         input_df = dfs[0]
         output_df = dfs[1]
+        print(input_df)
+        print(output_df)
         for i in range(1, len(filenames)):
-            df = np.split(pd.read_csv(path + '/' + dir +'/'+ filenames[i]), [13], axis=1)[1]
+            df = np.split(pd.read_csv(path + '/' + dir +'/'+ filenames[i]), [14], axis=1)[1]
+            df = df[df.iteration +1 == df.usedIterations]
             output_df = output_df.add(df, fill_value=0)            
         for col in output_df.columns:
             output_df[col] *= 1/len(filenames)
-        output_df = input_df.join(output_df, how = 'outer')
+        print(output_df)
+        output_df = input_df.join(output_df, how = 'left')
         del output_df['Unnamed: 0']
         result.append(output_df)
     result_df = result[0]

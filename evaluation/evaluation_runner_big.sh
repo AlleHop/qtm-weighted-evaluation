@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -ex
-graph_sets='facebook social'
+graph_sets='facebook'
 #scenarios='full plateauBound withoutBucketQueue'
 scenarios='ratio'
 #scenarios='full plateauBound'
@@ -34,8 +34,6 @@ for graph_set in $graph_sets; do
       done
       wait
   done
-  wait
-  python3 python_scripts/means.py -p "../output/${output_name}/${graph_set}/temp_${scenario}/"
   wait
   python3 python_scripts/minimum_editcost.py -p "../output/${output_name}/${graph_set}/temp_${scenario}/"
   wait

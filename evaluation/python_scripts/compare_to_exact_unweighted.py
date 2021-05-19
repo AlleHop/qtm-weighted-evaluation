@@ -21,7 +21,7 @@ graph_names = exact_df[['graph']]
 exact_df = exact_df.drop(columns=['graph'])
 output_df = qtm_df.merge(exact_df, on='graph_index', how='outer' ).fillna(value= -1).sort_values(['graph_index'])
 output_df.insert(len(output_df.columns), 'ratio', 0.0)
-output_df = output_df.astype({'edits' : 'int64', 'editsWeight' : 'int64','usedIterations' : 'int64','actualPlateau': 'int64', 'n': 'int64', 'solution_cost': 'int64', 'qtm_base': 'int64'})
+output_df = output_df.astype({'edits' : 'int64', 'editCosts' : 'int64','usedIterations' : 'int64','actualPlateau': 'int64', 'n': 'int64', 'solution_cost': 'int64', 'qtm_base': 'int64'})
 for index, row in output_df.iterrows():
     #num = row[['graph']]
     #if(not(isinstance(num, str))):
@@ -34,15 +34,15 @@ for index, row in output_df.iterrows():
         exact_solution = output_df['solution_cost'][index] + 1
     if(output_df['solution_cost'][index]== -1):
         output_df['ratio'][index]= -1
-    elif(output_df['editsWeight'][index]== -1):
+    elif(output_df['editCosts'][index]== -1):
         output_df['ratio'][index]= -2
     elif(output_df['solution_cost'][index]== 0):
-        if(output_df['editsWeight'][index]!= 0):
+        if(output_df['editCosts'][index]!= 0):
             output_df['ratio'][index]= -3
         else:
             output_df['ratio'][index]= 1
     else:
-        ratio = output_df['editsWeight'][index] / exact_solution
+        ratio = output_df['editCosts'][index] / exact_solution
         output_df['ratio'][index] = ratio
 output_df.to_csv(".." + qtm.strip(".csv") + '_compare.csv', sep=',', encoding='utf-8')
 

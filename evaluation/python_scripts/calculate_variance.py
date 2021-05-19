@@ -29,23 +29,24 @@ for root, dirs, f in os.walk(path):
         df = seeds[0]
         for i in range(1, len(seeds)):
             df = pd.concat((df, seeds[i]), ignore_index = True)
-        output_df = df[(df['maxIterations'] == 50 ) &  (df['plateauSize'] == 50) ].drop(columns=['sortPaths','randomness','insertEditCost','removeEditCost'])
-
-        #mean = output_df.groupby('initialization')[['editsWeight','edits', 'time']].std(ddof=0)
-        mean_init = output_df.groupby('initialization')[['editsWeight','edits', 'time']].mean()
-        mean_seed = output_df.groupby('seed')[['editsWeight','edits', 'time']].mean()
-        std_init = output_df.groupby('initialization')[['editsWeight','edits', 'time']].std(ddof=0)
-        std_seed = output_df.groupby('seed')[['editsWeight','edits', 'time']].std(ddof=0)
-        min_init = output_df.groupby('initialization')[['editsWeight','edits', 'time']].min()
-        min_seed = output_df.groupby('seed')[['editsWeight','edits', 'time']].min()
-        output_df_init = output_df.drop(columns=['time','edits','editsWeight','usedIterations', 'actualPlateau', 'seed'])
+        df = df[df.iteration +1 == df.usedIterations]
+        #output_df = df.drop(columns=['sortPaths','randomness','insertEditCost','removeEditCost'])
+        output_df = df
+        #mean = output_df.groupby('initialization')[['editCosts','edits', 'time']].std(ddof=0)
+        mean_init = output_df.groupby('initialization')[['editCosts','edits', 'time']].mean()
+        mean_seed = output_df.groupby('seed')[['editCosts','edits', 'time']].mean()
+        std_init = output_df.groupby('initialization')[['editCosts','edits', 'time']].std(ddof=0)
+        std_seed = output_df.groupby('seed')[['editCosts','edits', 'time']].std(ddof=0)
+        min_init = output_df.groupby('initialization')[['editCosts','edits', 'time']].min()
+        min_seed = output_df.groupby('seed')[['editCosts','edits', 'time']].min()
+        output_df_init = output_df.drop(columns=['time','edits','editCosts','usedIterations', 'actualPlateau', 'seed'])
         output_df_init = output_df_init.join(min_init, on='initialization', how = 'inner').join(mean_init, on='initialization',lsuffix='Min', how = 'inner').join(std_init, on='initialization',lsuffix='Mean',rsuffix='Std', how = 'inner')
         output_df_init = output_df_init.drop_duplicates(subset= ['graph', 'initialization'])
-        output_df_seed = output_df.drop(columns=['time','edits','editsWeight','usedIterations', 'actualPlateau', 'initialization'])
+        output_df_seed = output_df.drop(columns=['time','edits','editCosts','usedIterations', 'actualPlateau', 'initialization'])
         output_df_seed = output_df_seed.join(min_seed, on='seed', how = 'inner').join(mean_seed, on='seed',lsuffix='Min', how = 'inner').join(std_seed, on='seed',lsuffix='Mean',rsuffix='Std', how = 'inner')
         output_df_seed = output_df_seed.drop_duplicates(subset= ['graph', 'seed'])
-        output_df_init['WeightVariantionCoefficient'] = output_df_init['editsWeightStd'] / output_df_init['editsWeightMean'].replace({ 0 : 1 })
-        output_df_seed['WeightVariantionCoefficient'] = output_df_seed['editsWeightStd'] / output_df_seed['editsWeightMean'].replace({ 0 : 1 })
+        output_df_init['WeightVariantionCoefficient'] = output_df_init['editCostsStd'] / output_df_init['editCostsMean'].replace({ 0 : 1 })
+        output_df_seed['WeightVariantionCoefficient'] = output_df_seed['editCostsStd'] / output_df_seed['editCostsMean'].replace({ 0 : 1 })
         del output_df_init['Unnamed: 0']
         del output_df_seed['Unnamed: 0']
         result_init.append(output_df_init)

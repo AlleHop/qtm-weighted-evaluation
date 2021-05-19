@@ -29,8 +29,6 @@ for graph_set in $graph_sets; do
       wait
   done
   wait
-  python3 python_scripts/means.py -p "../output/${output_name}/${graph_set}/temp_${scenario}/"
-  wait
   python3 python_scripts/minimum_editcost.py -p "../output/${output_name}/${graph_set}/temp_${scenario}/"
   wait
   python3 python_scripts/all.py -p "../output/${output_name}/${graph_set}/temp_${scenario}/"

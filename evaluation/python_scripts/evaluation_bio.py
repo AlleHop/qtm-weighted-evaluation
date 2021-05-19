@@ -55,25 +55,28 @@ def executeMover (G, graph_name, init, sortPath, random, subtreeMove, subtreeSor
         mover = nk.community.QuasiThresholdEditingLocalMover(randomized_graph, init, max(maxIterations), sortPath, random, subtreeMove, subtreeSortPath, maxPlateau, True, insertEditCost, removeEditCost)
     else:
         mover = nk.community.QuasiThresholdEditingLocalMover(randomized_graph, init, max(maxIterations), sortPath, random, subtreeMove, subtreeSortPath, maxPlateau, True, 1, 1, weightMatrix)
-    a = timeit.default_timer()
-    mover.run()
-    delta = timeit.default_timer() - a
+    #a = timeit.default_timer()
+    #mover.run()
+    total_time = timeit.timeit(mover.run, number=1)
+    #delta = timeit.default_timer() - a
     edits = mover.getNumberOfEdits()
-    editsWeight = mover.getCostOfEdits()
+    editCosts = mover.getCostOfEdits()
     usedIterations = mover.getUsedIterations()
-    time = delta * 1000
+    #time = delta * 1000
+    
     if(random):
         actualPlateau =  mover.getPlateauSize()
     else:
         actualPlateau = 0
     i = len(df.index)
     editsDevelopement = mover.getRunningInfo()[b'edits']
-    editsWeightDevelopement = mover.getRunningInfo()[b'edit_costs']
-    for m in maxIterations:
-        u = min(m, usedIterations)
-        edits = editsDevelopement[u]
-        editsWeight = editsWeightDevelopement[u]      
-        df.loc[i] = [graph_name, G.numberOfNodes(), seed, getInitName(init), m, sortPath, random, subtreeMove, subtreeSortPath, maxPlateau, insertEditCost, removeEditCost, edits, editsWeight, u, actualPlateau, time]
+    editCostsDevelopement = mover.getRunningInfo()[b'edit_costs']
+    timeDevelopment = mover.getRunningInfo()[b'time']
+    for j in range(usedIterations):
+        edits = editsDevelopement[j]
+        editCosts = editCostsDevelopement[j]   
+        time = timeDevelopment[j]   
+        df.loc[i] = [graph_name, G.numberOfNodes(), G.numberOfEdges(), seed, getInitName(init), max(maxIterations), sortPath, random, subtreeMove, subtreeSortPath, maxPlateau, insertEditCost, removeEditCost,  usedIterations, actualPlateau,total_time, j, edits, editCosts,time]
         i += 1
     del mover
     del randomized_graph
@@ -185,6 +188,7 @@ if(scenario == 'biorandtreeinit'):
 
 df = pd.DataFrame(columns  = ['graph',
                               'n',
+                              'm',
                               'seed',
                               'initialization',
                               'maxIterations',
@@ -195,11 +199,13 @@ df = pd.DataFrame(columns  = ['graph',
                               'plateauSize',
                               'insertEditCost',
                               'removeEditCost',
-                              'edits',
-                              'editsWeight',
                               'usedIterations',
                               'actualPlateau',
-                              'time'])
+                              'time',
+                              'iteration',
+                              'edits',
+                              'editCosts',
+                              'timeIteration'])
 
 
 graph_name_simple = graph_name.split('/')[-1].split('.')[0]
@@ -220,7 +226,7 @@ df['plateauSize'] = df['plateauSize'].apply(np.int64)
 df['insertEditCost'] = df['insertEditCost'].apply(np.int64)
 df['removeEditCost'] = df['removeEditCost'].apply(np.int64)
 df['edits'] = df['edits'].apply(np.int64)
-df['editsWeight'] = df['editsWeight'].apply(np.int64)
+df['editCosts'] = df['editCosts'].apply(np.int64)
 df['usedIterations'] = df['usedIterations'].apply(np.int64)
 df['actualPlateau'] = df['actualPlateau'].apply(np.int64)
 df['n'] = df['n'].apply(np.int64)

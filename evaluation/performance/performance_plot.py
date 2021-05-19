@@ -149,10 +149,10 @@ def transform_input(df):
 if __name__ == '__main__':
     for result_name in [#'fb_results-all-aggregated.csv',
                         #'biomatrix_all.csv',
-                        #'biosubtreeMove_all.csv',
+                        'biosubtreeMove_all.csv',
                         #'bioweighted_all.csv',
-                        #'biounweighted_all.csv',
-                        #'unweighted_all.csv',
+                        'biounweighted_all.csv',
+                        'unweighted_all.csv',
                         'ratio_all.csv',
                         #'large_results-aggregated.csv',
                         #'generated_results-aggregated.csv'
@@ -161,6 +161,9 @@ if __name__ == '__main__':
         d = { 'graph':['none'], 'solution_cost':[-1]}
         exact_solution = pd.DataFrame(d,columns=['graph','solution_cost'])
 
+        if not os.path.isfile(path + result_name):
+            continue
+
         if(exact != ""):
             exact_solution = pd.read_csv(exact)
             exact_solution['path'] = exact_solution['path'].str.replace("data/bio/", "").str.replace(".graph", "")
@@ -168,10 +171,10 @@ if __name__ == '__main__':
             exact_solution = exact_solution.set_index(['graph'])
             #print(exact_solution)
             #print(exact_solution[exact_solution['graph'] == 'bio-nr-3212-size-5'])
-        
+
         d = pd.read_csv(path + result_name)
-        d['Best k'] = d.groupby(['graph'])['editsWeight'].transform(np.min)
-        assert ((d['Best k'] <= d['editsWeight']) | d['editsWeight'].isna()).all()
+        d['Best k'] = d.groupby(['graph'])['editCosts'].transform(np.min)
+        assert ((d['Best k'] <= d['editCosts']) | d['editCosts'].isna()).all()
         d['Best unweighted k'] = d.groupby(['graph'])['edits'].transform(np.min)
         assert ((d['Best unweighted k'] <= d['edits']) | d['edits'].isna()).all()
 
@@ -199,10 +202,10 @@ if __name__ == '__main__':
             if len(filtered_df) == 0:
                 continue
 
-            filtered_df['exact'] = filtered_df.groupby(['graph'])['editsWeight'].transform(lambda x : exact_solution[x.name] if x.name in exact_solution else np.nan)
+            filtered_df['exact'] = filtered_df.groupby(['graph'])['editCosts'].transform(lambda x : exact_solution[x.name] if x.name in exact_solution else np.nan)
             #print(filtered_df)
-            filtered_df['Best filtered k'] = filtered_df.groupby(['graph'])['editsWeight'].transform(np.min)
-            assert ((filtered_df['Best filtered k'] <= filtered_df['editsWeight']) | filtered_df['editsWeight'].isna()).all()
+            filtered_df['Best filtered k'] = filtered_df.groupby(['graph'])['editCosts'].transform(np.min)
+            assert ((filtered_df['Best filtered k'] <= filtered_df['editCosts']) | filtered_df['editCosts'].isna()).all()
             filtered_df['Best filtered unweighted k'] = filtered_df.groupby(['graph'])['edits'].transform(np.min)
             assert ((filtered_df['Best filtered unweighted k'] <= filtered_df['edits']) | filtered_df['edits'].isna()).all()
 
@@ -210,8 +213,8 @@ if __name__ == '__main__':
             #     filtered_df['Perf. Ratio'] = filtered_df['Edits 20'] / filtered_df['Best filtered k']
             #     filtered_df.loc[(filtered_df['Edits 20'] == filtered_df['Best filtered k']), 'Perf. Ratio'] = 1.0
             # else:
-            filtered_df['Perf. Ratio'] = filtered_df['editsWeight'] / filtered_df['Best filtered k']
-            filtered_df.loc[(filtered_df['editsWeight'] == filtered_df['Best filtered k']), 'Perf. Ratio'] = 1.0
+            filtered_df['Perf. Ratio'] = filtered_df['editCosts'] / filtered_df['Best filtered k']
+            filtered_df.loc[(filtered_df['editCosts'] == filtered_df['Best filtered k']), 'Perf. Ratio'] = 1.0
             # filtered_df.loc[((filtered_df['Best k'] == 0) & (filtered_df['Edits'] > 0)), 'Perf. Ratio'] = 100
 
             plot_df = get_fraction_ratio_df(filtered_df)
@@ -239,7 +242,7 @@ if __name__ == '__main__':
 
                 fig.savefig(
                     output_path + result_name.replace('.csv',
-                                        '-min-k-0-editsWeight-performance-{}.pdf'.format(set_name)),
+                                        '-min-k-0-editCosts-performance-{}.pdf'.format(set_name)),
                     bbox_inches='tight')
 
                 plot_df = get_fraction_ratio_df(filtered_df[filtered_df['Best unweighted k'] > 20])
