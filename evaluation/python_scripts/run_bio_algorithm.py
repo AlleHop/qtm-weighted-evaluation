@@ -35,8 +35,7 @@ mover = nk.community.QuasiThresholdEditingLocalMover(G, init, iterations, True, 
 mover.run()
 D = mover.getDynamicForestGraph()
 Q = mover.getQuasiThresholdGraph()
-edits = mover.getRunningInfo()[b'edits']
-editsCost = mover.getRunningInfo()[b'edits_weight']
-Gephi = nk.readGraph("../../input/biological/graphs/" + bioname + ".graph", Format.METIS)
+edits = mover.getNumberOfEdits()
+editCosts = mover.getCostOfEdits()
 print("Edits: ", edits)
-print("EditCosts: ", editsCost)
+print("EditCosts: ", editCosts)

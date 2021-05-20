@@ -1,24 +1,45 @@
 from networkit import *
+import argparse
+import scipy
+import numpy as np
 
+parser = argparse.ArgumentParser(prog='forest_stream.py')
+parser.add_argument('-p', '--path', help='path to facebook graph')
 
+fb_attr = "../../input/facebook/graphs/Caltech36.mat"
+matlabObject = scipy.io.loadmat(fb_attr)
+array = np.array(matlabObject["local_info"])
+array = array[:,4]
+d = array.tolist()
+print(d)
+attribute_dict = {
+    "student_fac" : 0,
+    "gender" : 1,
+    "major_index" : 2,
+    "second_major" : 3,
+    "dorm" : 4,
+    "year" : 5,
+    "high_school" : 6,
+}
+
+for attribute in ["dorm"]:
+    if attribute not in attribute_dict:
+        raise Exception("Attribute {0} not found".format(attribute))
+
+    value_dict = {}
+    col = attribute_dict[attribute]
+
+    for u, a in enumerate(matlabObject['local_info'][:,col]):
+        value_dict[a] = u
+
+args = parser.parse_args()
+facebookname = args.path
 #G = readGraph("../../networkit/input/karate.graph", Format.METIS)
-G = readGraph("../../input/biological/graphs/bio-nr-233-size-80.graph", Format.METIS)
-with open("../../input/biological/weights/bio-nr-233-size-80.csv", 'r') as read_obj:
-    # pass the file object to reader() to get the reader object
-    # csv_reader = reader(read_obj)
-    # Pass reader object to list() to get a list of lists
-    weightMatrix = [list(map(int,rec)) for rec in csv.reader(read_obj, delimiter=',')]
+G = readGraph(facebookname, Format.METIS)
+client = gephi.streaming.GephiStreamingClient(url='http://localhost:8080/workspace1')
+client.exportGraph(G)
 
-mover = community.QuasiThresholdEditingLocalMover(G, 0, 400, True, True, False, 100, True, 1, 1, weightMatrix)
-mover.run()
-Q = mover.getQuasiThresholdGraph()
-client = gephi.streaming.GephiStreamingClient(url='http://localhost:8080/workspace0')
-client.exportGraph(Q)
-edits = mover.getRunningInfo()[b'edits']
-editsCost = mover.getRunningInfo()[b'edits_weight']
-
-print("Edits: ", edits)
-print("EditCosts: ", editsCost)
-
-communities = community.detectCommunities(Q)
+communities = community.detectCommunities(G)
+print(communities)
 client.exportNodeValues(G, communities, "community")
+client.exportNodeValues(G, d, "dorm")
