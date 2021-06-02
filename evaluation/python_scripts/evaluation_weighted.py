@@ -136,14 +136,14 @@ if(scenario == 'unweighted'):
 
 if(scenario == 'ratio'):
     initializations = [0, 1]
-    maxIterations = [50]
+    maxIterations = [400]
     sortPaths = [True]
     randomness = [True]
-    plateauSize = [50]
+    plateauSize = [100]
     insertEditCosts = [1,2]
     removeEditCosts = [1,2]
     subtreeMove = [False, True]
-    subtreeSortPaths = [True, False]
+    subtreeSortPaths = [False]
     weightMatrix = []
     editMatrixUsed = False
 

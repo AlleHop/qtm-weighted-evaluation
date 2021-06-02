@@ -33,6 +33,8 @@ for graph_set in $graph_sets; do
   wait
   python3 python_scripts/all.py -p "../output/${output_name}/${graph_set}/temp_${scenario}/"
   wait
+  python3 python_scripts/time_per_iter.py -p "../output/${output_name}/${graph_set}/temp_${scenario}/"
+  wait
   python3 python_scripts/calculate_variance.py -p "../output/${output_name}/${graph_set}/temp_${scenario}/"
   wait
   python3 python_scripts/sort.py -p "../output/${output_name}/${graph_set}/"
@@ -48,4 +50,6 @@ for graph_set in $graph_sets; do
   done
 done
 python3 performance/performance_plot.py -p "../output/${output_name}/${graph_set}/"
+wait
+python3 performance/timeIteration_plot.py -p "../output/${output_name}/${graph_set}/"
 wait

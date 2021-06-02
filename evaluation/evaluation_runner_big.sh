@@ -3,7 +3,7 @@
 set -ex
 graph_sets='facebook'
 #scenarios='full plateauBound withoutBucketQueue'
-scenarios='unweighted'
+scenarios='ratio'
 #scenarios='full plateauBound'
 seeds='0 1 2 3 4 5 6 7 8 9'
 output_name='QTM_big'

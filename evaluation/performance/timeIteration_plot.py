@@ -17,7 +17,7 @@ path = args['path']
 
 def algorithm_style(algorithm):
     if "nonuniform" in algorithm:
-        return "^"
+        return "."
     return "."
 
 my_algo_colors = sns.color_palette(n_colors=6)
@@ -29,6 +29,23 @@ def algorithm_color(algorithm):
         return my_algo_colors[3]
     if "subtree" in algorithm:
         return my_algo_colors[1]
+    assert False
+
+def algorithm_color_combine(algorithm):
+    if "COG" in algorithm:
+        if "sort" in algorithm:
+            return my_algo_colors[2]
+        if "no-subtree" in algorithm:
+            return my_algo_colors[3]
+        if "subtree" in algorithm:
+            return my_algo_colors[1]
+    if "facebook" in algorithm:
+        if "sort" in algorithm:
+            return my_algo_colors[4]
+        if "no-subtree" in algorithm:
+            return my_algo_colors[4]
+        if "subtree" in algorithm:
+            return my_algo_colors[5]
     assert False
 
 
@@ -74,12 +91,25 @@ def plot_with_buckets(df):
 def plot_simple(df):
     fig, ax = plt.subplots(1, figsize=(9, 3))
     for algo, values in df.groupby('algorithm'):
-        ax.plot(values['m'], values['Time per Edge'], label=algo,
-                color=algorithm_color(algo), marker=algorithm_style(algo))
+        ax.scatter(values['m'], values['Time per Edge'], label=algo,
+                color=algorithm_color(algo), marker=algorithm_style(algo), s=5)
     ax.grid(b=True, axis='both', which='major', ls='dashed')
     ax.legend()
     ax.set_ylabel('Time per iteration and edge  [in \u03BCs]')
     ax.set_xlabel('Number of edges')
+    ax.set_xscale('log')
+    return fig
+
+def plot_simple_combine(df):
+    fig, ax = plt.subplots(1, figsize=(9, 3))
+    for algo, values in df.groupby('algorithm'):
+        ax.scatter(values['m'], values['Time per Edge'], label=algo,
+                color=algorithm_color_combine(algo), marker=algorithm_style(algo), s=5)
+    ax.grid(b=True, axis='both', which='major', ls='dashed')
+    ax.legend()
+    ax.set_ylabel('Time per iteration and edge  [in \u03BCs]')
+    ax.set_xlabel('Number of edges')
+    ax.set_xscale('log')
     return fig
 
 if __name__ == '__main__':
@@ -94,8 +124,14 @@ if __name__ == '__main__':
         if not os.path.isfile(path + result_name) and result_name != "combine.csv" :
             continue
         if result_name == "combine.csv":
-            a = pd.read_csv(path + 'biosubtreeMove_time.csv')
+            if not os.path.isfile(path + 'biounweighted_time.csv'):
+                continue
+            if not os.path.isfile(path + 'unweighted_time.csv'):
+                continue
+            a = pd.read_csv(path + 'unweighted_time.csv')
+            a['algorithm'] = a['algorithm'].str.replace("QTM", "facebook100")
             b = pd.read_csv(path + 'biounweighted_time.csv')
+            b['algorithm'] = b['algorithm'].str.replace("QTM", "COG similarity")
             d = pd.concat([a,b])
         else :
             d = pd.read_csv(path + result_name)
@@ -120,9 +156,11 @@ if __name__ == '__main__':
             filtered_df = filtered_df[filtered_df['Best unweighted k'] > 20]
 
             plot_df = filtered_df
-            if plot_df['m'].max() > 100:
-                fig = plot_with_buckets(plot_df)
-            else:
+            print(plot_df['Time per Edge'].max())
+
+            if result_name == "combine.csv":
+                fig = plot_simple_combine(plot_df)
+            else:    
                 fig = plot_simple(plot_df)
             
             output_path = path + '/plot/' 
