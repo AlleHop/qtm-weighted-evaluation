@@ -106,7 +106,7 @@ def plot_with_buckets(df):
 
     #axes[0].legend(ncol=3, fancybox=False, frameon=False, loc='upper left',
     #               bbox_to_anchor=(-0.16, -0.15))
-    axes[-1].legend(loc='lower right')
+    axes[-1].legend(loc='lower right', prop={'size': 8})
     for i in range(nbuckets):
         axes[i].set_xlim(bb[i], bb[i+1])
         # axes[i].set_ylim(0.99, 1.001)
