@@ -29,8 +29,8 @@ if __name__ == '__main__':
     ]])
 
     df.loc[df.Dataset == 'facebook', 'Dataset'] = 'Facebook 100'
-    df.loc[df.Dataset == 'biological', 'Dataset'] = 'COQ uniform'
-    df.loc[df.Dataset == 'biononuniform', 'Dataset'] = 'COQ nonuniform'
+    df.loc[df.Dataset == 'biological', 'Dataset'] = 'COG uniform'
+    df.loc[df.Dataset == 'biononuniform', 'Dataset'] = 'COG nonuniform'
     df = df[(df.edits >= 20) | (df.Dataset == 'Facebook 100')]
     df = df[(df['algorithm'].str.contains('no-init')) | (df['algorithm'].str.contains('edit-init'))]
     df['algorithm'] = df['algorithm'].str.replace("-nonuniform", "")
@@ -42,4 +42,4 @@ if __name__ == '__main__':
     g.set(xscale='log')
     ax.grid(b=True, axis='x', which='both', ls='dashed')
     ax.legend
-    plt.savefig(path +'plot/'+ 'bio_all_iterations.pdf', bbox_inches='tight')
+    plt.savefig(path +'plot/'+ 'facebook_nochanges_iterations.pdf', bbox_inches='tight')

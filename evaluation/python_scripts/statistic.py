@@ -18,22 +18,25 @@ for file in os.listdir(path + "sorted/"):
         output_d = {'graph_set': ['bio']}
         output_df = pd.DataFrame(data=output_d)
         df = pd.read_csv(path + "sorted/"+ file)
-        sum_exact_list = []
-        sum_noexact_list = []
-        sum_good_list = []
-        sum_bad_list = []
-        sum_exact = len(df[(df['ratio']==1.0)])
-        sum_exact_list.append(sum_exact)
-        sum_noexact = len(df[(df['ratio']==-1.0)])
-        sum_noexact_list.append(sum_noexact)
-        sum_good = len(df[(df['ratio']>1.0) & (df['ratio']<=1.05)])
-        sum_good_list.append(sum_good)
-        sum_bad = len(df[(df['ratio']>1.05)])
-        sum_bad_list.append(sum_bad)
-        output_df.insert(1,'exact_solved', sum_exact_list)
-        output_df.insert(2,'no_exact_solution', sum_noexact_list)
-        output_df.insert(3,'solved<1.05', sum_good_list)
-        output_df.insert(3,'solved>1.05', sum_bad_list)
+        df['solved'] = df['solved'].astype(str)
+        df['solved'] = df['solved'].replace({True: 'True', False: 'True', '-1': 'False'})
+        #df = df['solved'].replace({True: 'True', False: 'True', "-1": 'False'})
+        output_df["number graphs"] = len(df)
+        output_df["exact solution given"] = len(df[df.solved == "True"])
+        output_df["lower bound given"] = len(df[(df.solved != "True") & (df.solution_cost >= 0)])
+        output_df["no exact solution given"] = len(df[~(df.solved == "True")])
+        output_df["exact solved by QTM"] = len(df[df.ratio == 1.0])
+        output_df["exact solved by subtreeMove"] = len(df[(df.ratio == 1.0) & (df.subtreeMove == True)])
+        output_df["exact solved by subtreeSortPath"] = len(df[(df.ratio == 1.0) & (df.subtreeSortPaths == True)])
+        output_df["max 5% worse than exact"] = len(df[(df.ratio > 1.0) & (df.ratio <= 1.05) & (df.solved == 'True')])
+        output_df["more than 5% worse"] = len(df[(df.ratio > 1.05) & (df.solved == 'True')])
+        output_df["error ratio > 1.0?"] = len(df[(df.ratio < 1.0) & (df.solved == 'True')])
+        output_df["max ratio"] = df['ratio'].max()
+        output_df["noexact best solution subtreemove"] = len(df[(df.solved != "True") & (df.subtreeMove == True)])
+        output_df["noexact best solution subtreesort"] = len(df[(df.solved != "True") & (df.subtreeSortPaths == True)])
+        output_df["best solution subtreemove"] = len(df[(df.subtreeMove == True)])
+        output_df["best solution subtreesort"] = len(df[ (df.subtreeSortPaths == True)])
+        print(df[(df.ratio < 1.0) & (df.solved == 'True')])
         print(output_df)
         #del output_df['Unnamed: 0']
         if not os.path.exists(output_path):

@@ -19,18 +19,21 @@ if __name__ == '__main__':
     df = pd.concat([pd.read_csv(path + f) for f in [
         #       'fb_results-all-aggregated.csv',
         #       'bio_results-all-aggregated.csv'
-        #'biosubtreeMove_all_dataset.csv',
-        #'ratio_all_dataset.csv'
-        'biounweighted_all_nochanges.csv',
-        'unweighted_all_nochanges.csv'
+        'biosubtreeMove_all_nochanges.csv',
+        'biounweighted_all_nochanges.csv'
+        #'unweighted_all_dataset.csv'
+        #'biounweighted_all_nochanges.csv',
+        #'unweighted_all_nochanges.csv'
         # 'large_results-aggregated.csv',
         # 'generated_results-aggregated.csv'
     ]])
 
     df.loc[df.Dataset == 'facebook', 'Dataset'] = 'Facebook 100'
-    df.loc[df.Dataset == 'biological', 'Dataset'] = 'COQ protein similarity'
+    df.loc[df.Dataset == 'biological', 'Dataset'] = 'COG uniform'
+    df.loc[df.Dataset == 'biononuniform', 'Dataset'] = 'COG nonuniform'
     df = df[(df.edits >= 20) | (df.Dataset == 'Facebook 100')]
     df = df[(df['algorithm'].str.contains('no-init')) | (df['algorithm'].str.contains('edit-init'))]
+    df['algorithm'] = df['algorithm'].str.replace("-nonuniform", "")
     #df = df[(df.Graph.isin(graphs_mink_20) | (df.Dataset == 'Facebook 100')) & ~df['Algorithm'].str.contains('c-min')]
     algorithm_order = sorted(df.algorithm.unique(), key=lambda x : x[::-1])
 
@@ -39,4 +42,4 @@ if __name__ == '__main__':
     g.set(xscale='log')
     ax.grid(b=True, axis='x', which='both', ls='dashed')
     ax.legend
-    plt.savefig(path +'plot/'+ 'nochanges_iterations.pdf', bbox_inches='tight')
+    plt.savefig(path +'plot/'+ 'bio_nochanges_iterations.pdf', bbox_inches='tight')

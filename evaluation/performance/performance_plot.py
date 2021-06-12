@@ -50,7 +50,11 @@ my_algo_colors = sns.color_palette(n_colors=6)
 def algorithm_color(algorithm):
     if "asc-min-init" in algorithm:
         return my_algo_colors[2]
+    if "no-init" in algorithm and "20" in algorithm:
+        return my_algo_colors[2]
     if "desc-min-init" in algorithm:
+        return my_algo_colors[3]
+    if "edit-init" in algorithm and "20" in algorithm:
         return my_algo_colors[3]
     if "edit-init" in algorithm:
         return my_algo_colors[1]
@@ -113,7 +117,7 @@ def plot_with_buckets(df):
         axes[i].grid(b=True, axis='both', which='major', ls='dashed')
 
     axes[0].set_xticks([1, 1.05, 1.1])
-    axes[1].set_xticks([1.5, 2.0])
+    axes[1].set_xticks([1.5])
 
     axes[0].set_ylabel('Fraction of instances')
     axes[nbuckets//2].set_xlabel('Performance ratio')
@@ -150,9 +154,11 @@ if __name__ == '__main__':
     for result_name in [#'fb_results-all-aggregated.csv',
                         #'biomatrix_all.csv',
                         'biosubtreeMove_all.csv',
+                        'biosubtreeMove_all_20iterations.csv',
                         #'bioweighted_all.csv',
                         'biounweighted_all.csv',
-                        'unweighted_all.csv',
+                        'biounweighted_all_20iterations.csv',
+                        'unweighted_all_20iterations.csv',
                         'ratio_all.csv',
                         #'large_results-aggregated.csv',
                         #'generated_results-aggregated.csv'
