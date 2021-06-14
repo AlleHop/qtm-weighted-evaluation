@@ -30,8 +30,25 @@ for root, dirs, f in os.walk(path):
         for i in range(1, len(seeds)):
             df = pd.concat((df, seeds[i]), ignore_index = True)
         df = df[df.iteration +1 == df.usedIterations]
-        #output_df = df.drop(columns=['sortPaths','randomness','insertEditCost','removeEditCost'])
         output_df = df
+        if "unweighted" in filenames[i]:
+            output_df['initialization'] = 'QTM-' + output_df['initialization'].astype(str)
+        else:
+            output_df['initialization'] = 'QTM-nonuniform-' + output_df['initialization'].astype(str)
+        output_df['initialization'] = output_df['initialization'].str.replace("_", "-")
+
+        #output_df['initialization'] = output_df['initialization'].astype(str) + output_df['sortPaths'].astype(str)
+        #output_df['initialization'] = output_df['initialization'].str.replace("False", "-no-sort").str.replace("True", "-sort")
+
+        #output_df['initialization'] = output_df['initialization'].astype(str) + output_df['sortPaths'].astype(str)
+        #output_df['initialization'] = output_df['initialization'].str.replace("False", "-no-random").str.replace("True", "-random")
+
+        output_df['initialization'] = output_df['initialization'].astype(str) + output_df['subtreeMove'].astype(str)
+        output_df['initialization'] = output_df['initialization'].str.replace("False", "-no-subtree").str.replace("True", "-subtree")
+
+        output_df['initialization'] = output_df['initialization'].astype(str) + output_df['subtreeSortPaths'].astype(str)
+        output_df['initialization'] = output_df['initialization'].str.replace("False", "").str.replace("True", "-sort")
+        #output_df = df.drop(columns=['sortPaths','randomness','insertEditCost','removeEditCost'])
         #mean = output_df.groupby('initialization')[['editCosts','edits', 'time']].std(ddof=0)
         mean_init = output_df.groupby('initialization')[['editCosts','edits', 'time']].mean()
         mean_seed = output_df.groupby('seed')[['editCosts','edits', 'time']].mean()

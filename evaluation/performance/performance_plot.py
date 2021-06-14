@@ -160,6 +160,8 @@ if __name__ == '__main__':
                         'biounweighted_all_20iterations.csv',
                         'unweighted_all_20iterations.csv',
                         'ratio_all.csv',
+                        'ratio_i1r2_all.csv',
+                        'ratio_i2r1_all.csv',
                         #'large_results-aggregated.csv',
                         #'generated_results-aggregated.csv'
                         # 'bio_with_20_iterations.csv'

@@ -5,9 +5,14 @@ import argparse
 
 parser = argparse.ArgumentParser(prog='all.py')
 parser.add_argument('-p', '--path')
+parser.add_argument('-i', '--insert', default=1, type=int)
+parser.add_argument('-r', '--remove', default=1, type=int)
+
 
 args = vars(parser.parse_args())
 path = args['path']
+insert = args['insert']
+remove = args['remove']
 
 parent_path = '/'.join(path.split('/')[:-2]) + '/'
 for root, dirs, f in os.walk(path):
@@ -19,7 +24,10 @@ for root, dirs, f in os.walk(path):
             filenames.append(file)
         if(len(filenames) == 0):
             continue
-        output_name = '_'.join(filenames[0].split('_')[1:-1]) + '_all.csv'
+        if insert == remove and insert ==1:
+            output_name = '_'.join(filenames[0].split('_')[1:-1]) + '_all.csv'
+        else:
+            output_name = '_'.join(filenames[0].split('_')[1:-1]) +'_i' + str(insert)+ 'r' +str(remove)+'_all.csv'
         seeds = []
         for i in range(0, len(filenames)):
             file_df = pd.read_csv(path + '/' + dir +'/'+ filenames[i])
@@ -28,6 +36,7 @@ for root, dirs, f in os.walk(path):
         for i in range(1, len(seeds)):
             df = pd.concat((df, seeds[i]), ignore_index = True)
         df = df[df.iteration +1 == df.usedIterations]
+        df = df[(df.insertEditCost == insert) & (df.removeEditCost == remove) ]
         #output_df = df.drop(columns=['insertEditCost','removeEditCost', 'maxIterations', 'plateauSize'])
         output_df = df
         if "unweighted" in filenames[i]:
