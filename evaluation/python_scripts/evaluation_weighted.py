@@ -129,8 +129,8 @@ if(scenario == 'unweighted'):
     plateauSize = [100]
     insertEditCosts = [1]
     removeEditCosts = [1]
-    subtreeMove = [False, True]
-    subtreeSortPaths = [False]
+    subtreeMove = [True]
+    subtreeSortPaths = [True]
     weightMatrix = []
     editMatrixUsed = False
 
@@ -142,8 +142,8 @@ if(scenario == 'ratio'):
     plateauSize = [100]
     insertEditCosts = [1,2]
     removeEditCosts = [1,2]
-    subtreeMove = [False, True]
-    subtreeSortPaths = [False]
+    subtreeMove = [True]
+    subtreeSortPaths = [True]
     weightMatrix = []
     editMatrixUsed = False
 
